@@ -1,0 +1,63 @@
+import { styled } from 'styled-components';
+import BigForm from '../Layout/send/BigForm';
+import MiniForm from '../Layout/send/MiniForm';
+
+const Main = styled.main`
+  background-color: var(--color-grey-0);
+  padding: 4rem 4.8rem 6.4rem;
+
+  @media (max-width:768px){
+    padding: 4rem 1rem;
+  }
+
+`;
+
+const Container = styled.div`
+  max-width: 120rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3.2rem;
+`;
+
+const Button = styled.button`
+max-width: 30rem;
+background-color: var(--color-orange-700);
+border: none;
+padding: 1rem 2rem;
+border-radius: 5rem;
+`;
+
+const FormContainer = styled.div`
+  display: grid;
+  grid-template-columns: 70% 30%;
+  gap: 3rem;
+
+  @media (max-width:1200px){
+    grid-template-columns: 1fr;
+  }
+`;
+
+const SendMoney = () => {
+  return (
+    <Main>
+      <Container>
+        <Button type='submit'>Send Money Anonymously</Button>
+        <p>
+          For your privacy, when you use this form to send money, your records
+          will not be saved. You won't find this transaction in your dashboard,
+          and the receiver contact won't be saved in your phonebook for future
+          use. Please consider signing in first, if you need any of these
+          benefits.
+        </p>
+              <hr />
+              <FormContainer>
+                  <BigForm />
+                  <MiniForm/>
+              </FormContainer>
+      </Container>
+    </Main>
+  );
+};
+
+export default SendMoney;
