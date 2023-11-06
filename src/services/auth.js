@@ -1,5 +1,5 @@
 import { URL } from './nodejsAPI';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 
 // LOGIN API
 export const login = async ({ email, password }) => {
@@ -19,7 +19,6 @@ export const login = async ({ email, password }) => {
       console.log(`HTTP Error status: ${response.status}`);
     }
 
-    console.log(response)
     const data = await response.json();
     return data;
   } catch (error) {
@@ -28,7 +27,7 @@ export const login = async ({ email, password }) => {
 };
 
 // SIGN UP API
-export const signup = async ({ firstName, lastName, email, password, passwordConfirm }) => {
+export const signup = async ({ fullName, email, password, passwordConfirm }) => {
   try {
     const response = await fetch(`${URL}/users/signup`, {
       method: 'POST',
@@ -36,8 +35,7 @@ export const signup = async ({ firstName, lastName, email, password, passwordCon
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        firstName,
-        lastName,
+        fullName,
         email,
         password,
         passwordConfirm

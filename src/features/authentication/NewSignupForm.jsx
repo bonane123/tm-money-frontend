@@ -22,9 +22,9 @@ function NewSignupForm() {
   const { register, formState, getValues, handleSubmit, reset } = useForm();
   const { errors } = formState;
 
-  function onSubmit({ fullName, lastName, email, password, passwordConfirm }) {
+  function onSubmit({ fullName, email, password, passwordConfirm }) {
     signup(
-      { fullName, lastName, email, password, passwordConfirm },
+      { fullName, email, password, passwordConfirm },
       { onSettled: reset }
     );
   }

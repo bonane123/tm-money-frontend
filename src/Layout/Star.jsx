@@ -6,8 +6,6 @@ function Star({ full, color, size }) {
     // cursor: 'pointer',
   };
 
-  console.log(full);
-
   return (
     <span
       role='button'

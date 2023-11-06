@@ -1,13 +1,14 @@
-import { useState } from 'react';
-import Button from '../../ui/Button';
-import Form from '../../ui/Form';
-import Input from '../../ui/Input';
-import FormRowVertical from '../../ui/FormRowVertical';
-import { useLogin } from './useLogin';
-import SpinnerMini from '../../ui/SpinnerMini';
-import StyledHeader2 from '../../ui/StyledHeaderH2';
-import StyledFormFooter from '../../ui/StyledFormFooter';
-import styled from 'styled-components';
+// import { useState } from "react";
+import Button from "../../ui/Button";
+import Form from "../../ui/Form";
+import Input from "../../ui/Input";
+import FormRowVertical from "../../ui/FormRowVertical";
+import { useLogin } from "./useLogin";
+import SpinnerMini from "../../ui/SpinnerMini";
+import StyledHeader2 from "../../ui/StyledHeaderH2";
+import StyledFormFooter from "../../ui/StyledFormFooter";
+import styled from "styled-components";
+import { useForm } from "react-hook-form";
 
 const StyledSignupSpace = styled.div`
   display: flex;
@@ -17,51 +18,50 @@ const StyledSignupSpace = styled.div`
 `;
 
 function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   const { isLoading, login } = useLogin();
+  const { register, formState, handleSubmit, reset } = useForm();
+  const { errors } = formState;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!email || !password) return;
-    try {
-      login({ email, password });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  function onSubmit({ email, password }) {
+    login({ email, password }, { onSettled: () => reset()  });
+  }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <StyledHeader2 description='Welcome to' />
-      <FormRowVertical label='Email address'>
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <StyledHeader2 description="Welcome to" />
+      <FormRowVertical label="Email address" error={errors?.email?.message}>
         <Input
-          type='email'
-          id='email'
+          type="email"
+          id="email"
           // This makes this form better for password managers
-          autoComplete='username'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="username"
+          {...register("email", {
+            required: "This field is required",
+            pattern: {
+              value: /\S+@\S+\.\S+/,
+              message: "please provide a valid email address",
+            },
+          })}
           disabled={isLoading}
         />
       </FormRowVertical>
 
-      <FormRowVertical label='Password'>
+      <FormRowVertical label="Password">
         <Input
-          type='password'
-          id='password'
-          autoComplete='current-password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          {...register("password", {
+            required: "This field is required",
+          })}
           disabled={isLoading}
         />
       </FormRowVertical>
       <FormRowVertical>
         <StyledSignupSpace>
-        <Button size='large' disabled={isLoading}>
-          {!isLoading ? 'Sign in' : <SpinnerMini />}
-        </Button>
+          <Button size="large" disabled={isLoading}>
+            {!isLoading ? "Sign in" : <SpinnerMini />}
+          </Button>
         </StyledSignupSpace>
         {/* <Button variation='secondary' size='large'>
           <svg
@@ -92,9 +92,9 @@ function LoginForm() {
         </Button> */}
       </FormRowVertical>
       <StyledFormFooter
-        linkDesc='Sign up'
+        linkDesc="Sign up"
         question="Don't have an account?"
-        newLink='/signup'
+        newLink="/signup"
       />
     </Form>
   );
