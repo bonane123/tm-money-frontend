@@ -1,7 +1,8 @@
-import { NavLink } from 'react-router-dom';
-import { styled } from 'styled-components';
-import DarkModeToggle from '../ui/DarkModeToggle';
-import { getAuthToken } from '../utils/auth';
+import { NavLink } from "react-router-dom";
+import { styled } from "styled-components";
+import DarkModeToggle from "../ui/DarkModeToggle";
+import { getAuthToken } from "../utils/auth";
+import Logout from "../features/authentication/Logout";
 
 const StyledHeaderMenu = styled.ul`
   display: flex;
@@ -9,7 +10,7 @@ const StyledHeaderMenu = styled.ul`
   justify-content: space-between;
 
   @media (max-width: 768px) {
-    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    display: ${({ isOpen }) => (isOpen ? "block" : "none")};
     flex-direction: column;
     align-items: start;
   }
@@ -28,17 +29,8 @@ const StyledNavLink = styled(NavLink)`
     padding: 1.2rem 2.4rem;
     transition: all 0.3s;
   }
-
-  /* This works because react-router places the active class on the active NavLink */
-  &:hover,
-  &:active,
-  &.active:link,
-  &.active:visited {
-    color: var(--color-grey-800);
-    color: var(--color-orange-700);
-    border-radius: var(--border-radius-sm);
-  }
 `;
+
 
 function HeaderMenu({ isOpen }) {
   const storedValue = getAuthToken();
@@ -47,18 +39,18 @@ function HeaderMenu({ isOpen }) {
     return (
       <StyledHeaderMenu isOpen={isOpen}>
         <li>
-          <StyledNavLink to='/'>Home</StyledNavLink>
+          <StyledNavLink to="/">Home</StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to='/about'>About Us</StyledNavLink>
+          <StyledNavLink to="/about">About Us</StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to='/send'>Send Money</StyledNavLink>
+          <StyledNavLink to="/send">Send Money</StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to='/login'>Login</StyledNavLink>
+          <StyledNavLink to="/login">Login</StyledNavLink>
         </li>
-        <li style={{ paddingLeft: '1.2rem' }}>
+        <li style={{ paddingLeft: "1.2rem" }}>
           <DarkModeToggle />
         </li>
       </StyledHeaderMenu>
@@ -68,33 +60,33 @@ function HeaderMenu({ isOpen }) {
   return (
     <StyledHeaderMenu isOpen={isOpen}>
       <li>
-        <StyledNavLink to='/'>Home</StyledNavLink>
+        <StyledNavLink to="/">Home</StyledNavLink>
       </li>
       <li>
-        <StyledNavLink to='/about'>About Us</StyledNavLink>
+        <StyledNavLink to="/about">About Us</StyledNavLink>
       </li>
       <li>
-        <StyledNavLink to='/send'>Send Money</StyledNavLink>
+        <StyledNavLink to="/send">Send Money</StyledNavLink>
       </li>
 
-      {storedValue.data.user.role === 'user' ? (
+      {storedValue.data.user.role === "user" ? (
         <li>
-          <StyledNavLink to='/reviews'>Reviews</StyledNavLink>
+          <StyledNavLink to="/reviews">Reviews</StyledNavLink>
         </li>
       ) : (
-        ''
+        ""
       )}
-      {storedValue.data.user.role === 'admin' ? (
+      {storedValue.data.user.role === "admin" ? (
         <li>
-          <StyledNavLink to='/dashboard'>Dashboard</StyledNavLink>
+          <StyledNavLink to="/dashboard">Dashboard</StyledNavLink>
         </li>
       ) : (
-        ''
+        ""
       )}
       <li>
-        <StyledNavLink to='/login'>Login</StyledNavLink>
+        <Logout/>
       </li>
-      <li style={{ paddingLeft: '1.2rem' }}>
+      <li style={{ paddingLeft: "1.2rem" }}>
         <DarkModeToggle />
       </li>
     </StyledHeaderMenu>
