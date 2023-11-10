@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import StarRating from "./StarRating";
 
 const StyleReview = styled.div`
-  height: 48rem;
+  height: 35rem;
   background-color: var(--color-grey-100);
   padding: 1rem 2rem;
   border-radius: 5px;
@@ -71,19 +71,19 @@ const StyledBtnReview = styled.button`
 function PostReview() {
     return (
         <StyleReview>
-  <h2>Post your review</h2>
+
   <ReviewForm>
-    <hr />
-    <StyledFormDiv>
+
+    {/* <StyledFormDiv>
       <label>Name</label>
       <StyledInput type='text' placeholder='Enter your Name' />
     </StyledFormDiv>
     <StyledFormDiv>
       <label>Email</label>
       <StyledInput type='lg:text' placeholder='Enter your email' />
-    </StyledFormDiv>
+    </StyledFormDiv> */}
     <StyledTextAreaDiv>
-      <label>Your Message</label>
+      <label>Your Comment</label>
       <StyledTextArea
         placeholder='Please enter your Message'
         type={'number'}

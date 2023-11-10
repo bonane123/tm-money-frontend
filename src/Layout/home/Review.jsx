@@ -1,7 +1,8 @@
 import { styled } from 'styled-components';
 
 import SingleReview from '../SingleReview';
-// import StarRating from '../StarRating';
+import { useReviews } from '../../features/reviews/useReviews';
+import Spinner from '../../ui/Spinner';
 
 const Main = styled.main`
   background-color: var(--color-grey-0);
@@ -40,16 +41,21 @@ const ReviewContainer = styled.div`
 `;
 
 function Review() {
+  const {data, isLoading} = useReviews();
+
   return (
     <Main>
       <Container>
-        {/* <StyledContainer> */}
+
         <ReviewContainer>
-          <SingleReview />
-          <SingleReview />
-          <SingleReview />
+          {isLoading ? <Spinner/> : 
+          <>
+          {data.map((review) => (
+          <SingleReview comment={review} key={review._id} />
+          ))}
+          </>
+}
         </ReviewContainer>
-        {/* </StyledContainer> */}
       </Container>
     </Main>
   );

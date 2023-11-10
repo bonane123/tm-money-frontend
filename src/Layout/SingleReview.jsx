@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import StarRating from './StarRating';
+import { formatDate } from '../utils/helpers';
 
 const StyledReview = styled.div`
   display: flex;
@@ -29,19 +30,16 @@ const StyledRating = styled.div`
   margin-bottom: 1.5rem;
   
 `;
-function SingleReview() {
+function SingleReview({ comment }) {
+  const { createdAt, user, rating, review } = comment;
   return (
     <StyledReview>
-      <StyledMessage>
-        I recently purchased a new laptop from this store and I was thoroughly
-        impressed with the quality of service and the product itself. The staff
-        was friendly and helpful and the laptop exceeded my expectations.
-      </StyledMessage>
+      <StyledMessage>{review}</StyledMessage>
       <StyledRating>
-        <p>John Deo</p>
-        <StarRating maxRating={5} size={24} />
+        <p>{formatDate(createdAt)}</p>
+        <StarRating maxRating={rating} size={24} />
       </StyledRating>
-      <p>2022-12-15</p>
+      <p>{user.fullName.split(' ')[0]}</p>
     </StyledReview>
   );
 }

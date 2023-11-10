@@ -135,7 +135,7 @@ function SendForm() {
         </select>
         {loading && <p>Loading</p>}
         {!loading && (
-          <input type='text' placeholder='They get' value={answer} disabled />
+          <input type='text' placeholder='They get' value={answer.toLocaleString()} disabled />
         )}
 
         {selectedToCountry && <p>{selectedToCountry.currency}</p>}

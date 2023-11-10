@@ -1,3 +1,4 @@
+import { getAuthToken } from '../utils/auth';
 import { URL } from './nodejsAPI';
 // import Cookies from 'js-cookie';
 
@@ -53,3 +54,25 @@ export const signup = async ({ fullName, email, password, passwordConfirm }) => 
     console.log(error);
   }
 };
+
+export async function getCurrentUser(){
+  try {
+
+     // Get the token from local storage.
+     const storedValue = getAuthToken();
+
+     const config = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${storedValue}`,
+      },
+    };
+
+    const data = await fetch('users/me', config)
+    console.log(data.data.data)
+    return data.data.data;
+  } catch (error) {
+    console.log(error)
+  }
+
+}
