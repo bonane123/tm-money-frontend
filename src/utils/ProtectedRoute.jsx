@@ -3,7 +3,6 @@ import { getAuthToken } from "./auth";
 
 const ProtectedRoute = ({ role }) => {
   let storedValue = getAuthToken();
-  console.log(storedValue)
 
   if (!storedValue) {
     return <Navigate to="/login" />;

@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 
 import SingleReview from '../SingleReview';
-import { useReviews } from '../../features/reviews/useReviews';
+import { useTopReviews } from '../../features/reviews/useTopReviews';
 import Spinner from '../../ui/Spinner';
 
 const Main = styled.main`
@@ -41,7 +41,7 @@ const ReviewContainer = styled.div`
 `;
 
 function Review() {
-  const {data, isLoading} = useReviews();
+  const {data, isLoading} = useTopReviews();
 
   return (
     <Main>

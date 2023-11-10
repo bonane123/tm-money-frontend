@@ -1,5 +1,10 @@
 import { styled } from "styled-components";
 import StarRating from "./StarRating";
+import { useUser } from "../../features/authentication/useUser";
+import Spinner from "../../ui/Spinner";
+import { useForm } from "react-hook-form";
+import { useCreateReview } from "../../features/reviews/useCreateReview";
+import { useState } from "react";
 
 const StyleReview = styled.div`
   height: 35rem;
@@ -8,7 +13,7 @@ const StyleReview = styled.div`
   border-radius: 5px;
 
   @media (max-width: 768px) {
-    & h2{
+    & h2 {
       font-size: 1.7rem;
       font-weight: 600;
     }
@@ -39,6 +44,7 @@ const StyledInput = styled.input`
   padding: 0.2rem 1rem;
   border-radius: 5px;
   width: 100%;
+
   &:focus {
     outline: none;
   }
@@ -67,41 +73,61 @@ const StyledBtnReview = styled.button`
   padding: 0.5rem 1rem;
   right: 0;
 `;
+const Error = styled.span`
+  font-size: 1.4rem;
+  color: var(--color-red-700);
+`;
 
 function PostReview() {
-    return (
-        <StyleReview>
+  const { user, isLoading } = useUser();
+  const [rating, setRating] = useState(0)
+  const { register, formState, handleSubmit, reset } = useForm();
+  const { createNewReview, isLoading: isReviewLoading } = useCreateReview(reset);
+  const { errors } = formState;
 
-  <ReviewForm>
+  if (isLoading) {
+    return <Spinner />;
+  }
 
-    {/* <StyledFormDiv>
-      <label>Name</label>
-      <StyledInput type='text' placeholder='Enter your Name' />
-    </StyledFormDiv>
-    <StyledFormDiv>
-      <label>Email</label>
-      <StyledInput type='lg:text' placeholder='Enter your email' />
-    </StyledFormDiv> */}
-    <StyledTextAreaDiv>
-      <label>Your Comment</label>
-      <StyledTextArea
-        placeholder='Please enter your Message'
-        type={'number'}
-        rows='8'
-        cols={'10'}
-      ></StyledTextArea>
-    </StyledTextAreaDiv>
+  if(!user){
+    return <Spinner />;
+  }
+  const handleSetRating = (rating) => {
+    setRating(rating);
+  };
+  function onSubmit({review}) {
+    createNewReview(
+      { review, rating, user: user.data.user._id }
+    );
+  }
+  return (
+    <StyleReview>
+      <ReviewForm onSubmit={handleSubmit(onSubmit)}>
+        <StyledTextAreaDiv>
+          <label>Your Feedback</label>
+          <StyledTextArea
+            placeholder="Please provide your feedback"
+            rows="8"
+            cols="10"
+            type="text"
+            disabled={isReviewLoading}
+            id="review"
+            {...register("review", {
+              required: "Please provide your feedback",
+            })}
+          ></StyledTextArea>
+        </StyledTextAreaDiv>
+        <StyledFormDiv>
+          {errors && <Error>{errors?.review?.message}</Error>}
+        </StyledFormDiv>
 
-    <StyledFormSubmit>
-      <StarRating />
-      <StyledBtnReview>Submit</StyledBtnReview>
-    </StyledFormSubmit>
-  </ReviewForm>
-</StyleReview>
-    )
- }
- 
- export default PostReview
- 
+        <StyledFormSubmit>
+          <StarRating onSetRating={handleSetRating}/>
+          <StyledBtnReview disabled={isReviewLoading}>Submit</StyledBtnReview>
+        </StyledFormSubmit>
+      </ReviewForm>
+    </StyleReview>
+  );
+}
 
-
+export default PostReview;
