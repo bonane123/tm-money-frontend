@@ -99,6 +99,7 @@ function PostReview() {
     createNewReview(
       { review, rating, user: user.data.user._id }
     );
+    setRating(0)
   }
   return (
     <StyleReview>

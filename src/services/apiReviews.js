@@ -3,9 +3,27 @@ import { URL } from "./nodejsAPI";
 
 const storedValue = getAuthToken();
 
+export const getReviews = async () => {
+  try {
+    const response = await fetch(`${URL}/reviews`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${storedValue.token}`
+      },
+    });
+
+    if (!response.ok) {
+      console.log(`HTTP Error status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const getTopReviews = async () => {
-
-
   try {
     const response = await fetch(`${URL}/reviews/topreviews`, {
       method: "GET",

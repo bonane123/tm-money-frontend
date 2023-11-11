@@ -10,7 +10,7 @@ const StyledHeaderMenu = styled.ul`
   justify-content: space-between;
 
   @media (max-width: 768px) {
-    display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+    display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
     flex-direction: column;
     align-items: start;
   }
@@ -37,7 +37,7 @@ function HeaderMenu({ isOpen }) {
 
   if (!storedValue) {
     return (
-      <StyledHeaderMenu isOpen={isOpen}>
+      <StyledHeaderMenu $isOpen={isOpen}>
         <li>
           <StyledNavLink to="/">Home</StyledNavLink>
         </li>
@@ -58,7 +58,7 @@ function HeaderMenu({ isOpen }) {
   }
 
   return (
-    <StyledHeaderMenu isOpen={isOpen}>
+    <StyledHeaderMenu $isOpen={isOpen}>
       <li>
         <StyledNavLink to="/">Home</StyledNavLink>
       </li>

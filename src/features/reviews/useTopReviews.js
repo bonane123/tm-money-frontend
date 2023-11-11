@@ -3,7 +3,7 @@ import { getTopReviews } from '../../services/apiReviews';
 
 export function useTopReviews() {
   const { isLoading, data, error } = useQuery({
-    queryKey: ['reviews'],
+    queryKey: ['topreviews'],
     queryFn: getTopReviews,
   });
 

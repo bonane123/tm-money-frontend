@@ -1,11 +1,13 @@
 import { styled } from 'styled-components';
 import StarRating from '../StarRating';
+import { getTimeDifferenceString } from '../../utils/helpers';
 
 const StyledReview = styled.div`
   display: flex;
   flex-direction: column;
+  background-color: var(--color-grey-100);
   max-width: 100%;
-  height: 250px;
+  margin-bottom: 1rem;
   border-radius: 5px;
   padding: 1rem 2rem;
   white-space: normal;
@@ -27,19 +29,19 @@ const StyledRating = styled.div`
   justify-content: space-between;
   margin-bottom: 1.5rem;
 `;
-function PostedReview() {
+function PostedReview({feedback}) {
+  const {review, rating, createdAt, user} = feedback;
+  const timeDifference = getTimeDifferenceString(createdAt)
   return (
     <StyledReview>
       <StyledMessage>
-        I recently purchased a new laptop from this store and I was thoroughly
-        impressed with the quality of service and the product itself. The staff
-        was friendly and helpful and the laptop exceeded my expectations.
+        {review}
       </StyledMessage>
       <StyledRating>
-        <p>John Deo</p>
-        <StarRating maxRating={5} size={24} />
+        <p>{user.fullName.split(" ")[0]}</p>
+        <StarRating maxRating={rating} size={24} />
       </StyledRating>
-      <p>2022-12-15</p>
+      <p>{timeDifference}</p>
     </StyledReview>
   );
 }

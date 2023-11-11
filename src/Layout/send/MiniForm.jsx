@@ -1,7 +1,10 @@
+import { format } from 'date-fns';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 const StyledMiniForm = styled.div`
-  background-color: var(--color-grey-100);
+  /* background-color: var(--color-grey-100); */
+  border: 1px solid var(--color-grey-200);
   border-radius: 8px;
   padding: 1.5rem;
   height: 70%;
@@ -55,7 +58,22 @@ const StyledRemark = styled.p`
 font-size: 1.5rem;
 `;
 
-function MiniForm() {
+function MiniForm({formData}) {
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    // Update the current time every second
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    // Clear the interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
+  const senderAmount = parseFloat(formData['amount-to-send']) || 0;
+  const transferFees = parseFloat(formData['receiver-gets']) || 0;
+  const receiverAmount =senderAmount - transferFees;
   return (
     <StyledMiniForm>
       <StyledH2>YOUR INVOICE WILL LOOK LIKE THIS</StyledH2>
@@ -66,7 +84,7 @@ function MiniForm() {
             <p>Data and Time:</p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>4/11/2023, 10:12:23 AM</p>
+            <p>{format(currentTime, "M/d/yyyy, h:mm:ss a")}</p>
           </StyledLeftDiv>
         </StyledDateTime>
         <StyledDateTime>
@@ -74,15 +92,23 @@ function MiniForm() {
             <p>Transfer Amount:</p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>KRW 0</p>
+            <p>KRW {parseFloat(senderAmount).toFixed(2)}</p>
           </StyledLeftDiv>
         </StyledDateTime>
         <StyledDateTime>
           <StyledRightDiv>
-            <p>Transfer Fees:</p>
+            <p>Received Amount:</p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>Flat fee: 0</p>
+            <p>KRW {parseFloat(receiverAmount).toFixed(2)}</p>
+          </StyledLeftDiv>
+        </StyledDateTime>
+        <StyledDateTime>
+          <StyledRightDiv>
+            <p>Transfer Fees: </p>
+          </StyledRightDiv>
+          <StyledLeftDiv>
+            <p>Flat fee: {transferFees}</p>
             <p>Percentage fee: 0%</p>
           </StyledLeftDiv>
         </StyledDateTime>

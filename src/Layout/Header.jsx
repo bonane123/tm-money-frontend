@@ -45,7 +45,7 @@ const StyledHeaderMenu = styled.div`
       border-radius: 5px;
     }
     background-color: transparent;
-    /* display: ${({ isOpen }) => (isOpen ? 'block' : 'none')}; */
+    display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
   }
 `;
 
@@ -54,7 +54,7 @@ function Header() {
 
   return (
     <StyledHeader>
-      <StyledHeaderMenu>
+      <StyledHeaderMenu $isOpen={isOpen}>
         <StyledHeaderLogo to='/'>
           <Logo />
         </StyledHeaderLogo>

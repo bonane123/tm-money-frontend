@@ -1,4 +1,4 @@
-import { format, formatDistance, parseISO } from 'date-fns';
+import { format, formatDistance, parseISO, formatDistanceToNow  } from 'date-fns';
 import { differenceInDays } from 'date-fns/esm';
 
 // We want to make this function work for both Date objects and strings (which come from Supabase)
@@ -37,4 +37,9 @@ export const formatCurrency = (value) =>
     const formattedDate = format(parsedDate, 'yyyy-MM-dd');
   
     return formattedDate;
+  }
+
+  export const getTimeDifferenceString = (createdAt) => {
+    const createdAtDate = new Date(createdAt);
+    return formatDistanceToNow(createdAtDate, { addSuffix: true });
   }

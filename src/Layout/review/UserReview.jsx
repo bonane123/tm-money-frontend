@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 import PostedReview from './PostedReview';
+import { useReviews } from '../../features/reviews/useReviews';
+import Spinner from '../../ui/Spinner';
 
 const ReviewContainer = styled.div`
   display: block;
@@ -7,11 +9,17 @@ const ReviewContainer = styled.div`
 `;
 
 function UserReview() {
+  const {isLoading, data} = useReviews()
+  if (isLoading){
+    return <Spinner/>
+  }
+
   return (
     <ReviewContainer>
-      <PostedReview />
-      <PostedReview />
-      <PostedReview />
+      {data.data.reviews.map((review) =>( 
+        <PostedReview key={review.id} feedback={review} />
+      ))}
+      
     </ReviewContainer>
   );
 }

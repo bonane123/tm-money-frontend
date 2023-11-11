@@ -42,6 +42,9 @@ const ReviewContainer = styled.div`
 
 function Review() {
   const {data, isLoading} = useTopReviews();
+  if (isLoading){
+    <Spinner/>
+  }
 
   return (
     <Main>
