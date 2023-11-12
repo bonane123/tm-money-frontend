@@ -58,8 +58,9 @@ const StyledRemark = styled.p`
 font-size: 1.5rem;
 `;
 
-function MiniForm({formData}) {
+function MiniForm({formData, answer}) {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { destinationCurrency } = formData;
 
   useEffect(() => {
     // Update the current time every second
@@ -70,6 +71,8 @@ function MiniForm({formData}) {
     // Clear the interval on component unmount
     return () => clearInterval(interval);
   }, []);
+
+  // console.log(selectedCurrency)
 
   const senderAmount = parseFloat(formData['amount-to-send']) || 0;
   const transferFees = parseFloat(formData['receiver-gets']) || 0;
@@ -119,7 +122,7 @@ function MiniForm({formData}) {
           <p>Exchange Rate:</p>
         </StyledRightDiv>
         <StyledLeftDiv>
-          <p>KRW 1 = MWK 0.680270</p>
+          <p>KRW 1 = {destinationCurrency} {answer}</p>
         </StyledLeftDiv>
       </StyledDateTime>
       <StyledDateTime>
@@ -127,7 +130,7 @@ function MiniForm({formData}) {
           <p>Recipient Gets:</p>
         </StyledRightSpecial>
         <StyledLeftSpecial>
-          <p>MWK 0</p>
+          <p>{destinationCurrency} {parseFloat(receiverAmount).toFixed(2)}</p>
         </StyledLeftSpecial>
       </StyledDateTime>
       <StyledRemark>

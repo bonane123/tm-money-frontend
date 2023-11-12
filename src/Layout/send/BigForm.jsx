@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { styled } from "styled-components";
+import { countries } from "../../data/countries";
 
 const StyledForm = styled.form`
   /* background-color: #152238; */
@@ -73,8 +75,11 @@ const StyledSendButton = styled.button`
   margin-bottom: 2rem;
 `;
 
-function BigForm({ updateFormData }) {
-  const { register, handleSubmit, watch, setValue } = useForm();
+function BigForm({ updateFormData, updateAnswer }) {
+  const { register, handleSubmit, setValue, watch } = useForm();
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState(0);
 
   // const watchAmountToSend = watch("amount-to-send", 0);
 
@@ -93,14 +98,51 @@ function BigForm({ updateFormData }) {
     }
 
     setValue("receiver-gets", transferFees);
-    updateFormData({ "amount-to-send": amount, "receiver-gets": transferFees });
+    updateFormData({
+      "amount-to-send": amount,
+      "receiver-gets": transferFees,
+      destinationCurrency: selectedCountry ? selectedCountry.currency : "KRW",
+    });
   };
+
+  const watchAmountToSend = watch("amount-to-send", 0);
+  useEffect(() => {
+    setAmount(watchAmountToSend);
+  }, [watchAmountToSend]);
+
+  useEffect(() => {
+    var myHeaders = new Headers();
+  myHeaders.append('apikey', 'RDt2npcGu4QVGOkuX7UwQsxlXMpj140q');
+
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+    headers: myHeaders,
+  };
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `https://api.apilayer.com/exchangerates_data/convert?to=${selectedCountry.currency ? selectedCountry.currency : 'KRW'}&from=${'KRW'}&amount=${1}`,
+          requestOptions
+        );
+        const data = await response.json();
+        console.log(data.result);
+        updateAnswer(data.result);
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false);
+    };
+    
+    fetchData(); // Call the fetchData function inside useEffect
+  }, [amount, selectedCountry]);
 
   const onSubmit = (data) => {
     // Handle form submission here
     console.log(data);
   };
-  const watchAmountToSend = watch("amount-to-send", 0);
+  // const watchAmountToSend = watch("amount-to-send", 0);
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
       <StyledP>Receiver Information</StyledP>
@@ -110,7 +152,7 @@ function BigForm({ updateFormData }) {
           <StyledInput
             type="text"
             id="receiver-first-name"
-            name="receiver-first-name"
+            {...register("receiverFirstName", { required: true })}
             placeholder="Ex: NIYIGENA"
             required
           />
@@ -120,7 +162,7 @@ function BigForm({ updateFormData }) {
           <StyledInput
             type="text"
             id="receiver-last-name"
-            name="receiver-last-name"
+            {...register("receiverLastName", { required: true })}
             placeholder="Ex: Adolphe"
             required
           />
@@ -132,13 +174,19 @@ function BigForm({ updateFormData }) {
           <StyledLabel htmlFor="destination-country">Country</StyledLabel>
           <StyledSelect
             id="destination-country"
-            name="destination-country"
+            {...register("destinationCountry", { required: true })}
             required
+            onChange={(e) =>
+              setSelectedCountry(
+                countries.find((c) => c.name === e.target.value)
+              )
+            }
           >
-            <option value="">Select a country</option>
-            <option value="Korea">Korea</option>
-            <option value="Japan">Japan</option>
-            <option value="USA">USA</option>
+            {countries.map((c) => (
+              <option value={c.name} key={c.name}>
+                {c.name}
+              </option>
+            ))}
           </StyledSelect>
         </StyledName>
         <StyledName>
@@ -146,7 +194,7 @@ function BigForm({ updateFormData }) {
 
           <StyledSelect
             id="destination-account"
-            name="destination-account"
+            {...register("destinationAccount", { required: true })}
             required
           >
             <option value="">Select an account</option>
@@ -161,8 +209,8 @@ function BigForm({ updateFormData }) {
           </StyledLabel>
           <StyledInput
             type="text"
-            id="destination-account"
-            name="destination-account"
+            id="destination-account-details"
+            {...register("destinationAccountDetails", { required: true })}
             placeholder="Ex: 500-400-222"
             required
           />
@@ -172,19 +220,19 @@ function BigForm({ updateFormData }) {
         <StyledLabel htmlFor="destination-currency">Currency</StyledLabel>
         <StyledSelect
           id="destination-currency"
-          name="destination-currency"
+          {...register("destinationCurrency", { required: true })}
           required
         >
-          <option value="">Select a currency</option>
-          <option value="KRW">KRW</option>
-          <option value="USD">USD</option>
-          <option value="JPY">JPY</option>
+          <option value={selectedCountry ? selectedCountry.currency : ""}>
+            {selectedCountry && <p> {selectedCountry.currency}</p>}
+            {!selectedCountry && <p>Select country first</p>}
+          </option>
         </StyledSelect>
       </StyledName>
       <StyledNames>
         <StyledName>
           <StyledLabel htmlFor="amount-to-send">
-            You Send (minimum is 5000 krw)
+            Amount To Send in KRW (minimum is 5000 krw)
           </StyledLabel>
           <StyledInput
             type="number"
@@ -200,7 +248,7 @@ function BigForm({ updateFormData }) {
             onChange={handleAmountChange}
           />
         </StyledName>
-        <StyledName>
+        {/* <StyledName>
           <StyledLabel htmlFor="receiver-gets">Receiver Gets</StyledLabel>
           <StyledInput
             type="number"
@@ -210,7 +258,7 @@ function BigForm({ updateFormData }) {
             {...register("receiver-gets", { valueAsNumber: true })}
             value={watchAmountToSend} // Display the value from watch function
           />
-        </StyledName>
+        </StyledName> */}
       </StyledNames>
       <div>
         <StyledSendButton type="submit">Send Money</StyledSendButton>
