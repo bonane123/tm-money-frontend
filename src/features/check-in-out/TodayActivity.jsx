@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 import Heading from '../../ui/Heading';
 import Row from '../../ui/Row';
-import { useToDayActivity } from './useToDayActivity';
 import Spinner from '../../ui/Spinner';
 import TodayItem from './TodayItem';
+import { useToDaysTransactions } from '../transactions/useToDaysTransactions';
 
 const StyledToday = styled.div`
   /* Box */
@@ -16,7 +16,7 @@ const StyledToday = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
-  grid-column: 1 / span 2;
+  grid-column: 1 / -1;
   padding-top: 2.4rem;
 `;
 
@@ -40,16 +40,19 @@ const NoActivity = styled.p`
 `;
 
 function TodayActivity() {
-  const { activities, isLoading } = useToDayActivity();
+  const {data, isLoading} = useToDaysTransactions()
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <StyledToday>
       <Row type='horizontal'>
         <Heading as='h2'>Today</Heading>
       </Row>
       {!isLoading ? (
-        activities?.length > 0 ? (
+        data.data.transactions?.length > 0 ? (
           <TodayList>
-            {activities.map((activity) => (
+            {data.data.transactions.map((activity) => (
               <TodayItem activity={activity} key={activity.id} />
             ))}
           </TodayList>

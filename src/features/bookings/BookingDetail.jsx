@@ -18,6 +18,7 @@ import Modal from '../../ui/Modal';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import { useDeleteBooking } from './useDeleteBooking';
 import Empty from '../../ui/Empty';
+import { useTransaction } from '../transactions/useTransaction';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -26,20 +27,22 @@ const HeadingGroup = styled.div`
 `;
 
 function BookingDetail() {
-  const { booking, isLoading } = useBooking();
-  const { checkout, isCheckingOut } = useCheckout();
-  const { deleteBooking, isDeletingBooking } = useDeleteBooking();
+  const { transaction, isLoading } = useTransaction();
+  // const { checkout, isCheckingOut } = useCheckout();
+  // const { deleteBooking, isDeletingBooking } = useDeleteBooking();
   const navigate = useNavigate();
 
   const moveBack = useMoveBack();
 
   if (isLoading) return <Spinner />;
-  if (!booking) return <Empty resourceName='booking' />;
+  if (!transaction) return <Empty resourceName='transaction' />;
 
-  const { status, id: bookingId } = booking;
+  const { status, id: transactionId } = transaction.data.transaction;
+  const singleTransaction = transaction.data.transaction
+  console.log(singleTransaction)
 
   const statusToTagName = {
-    unconfirmed: 'blue',
+    pending: 'blue',
     'checked-in': 'green',
     'checked-out': 'silver',
   };
@@ -48,15 +51,15 @@ function BookingDetail() {
     <>
       <Row type='horizontal'>
         <HeadingGroup>
-          <Heading as='h1'>Booking #{bookingId}</Heading>
-          <Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
+          <Heading as='h2'>Transaction #{transactionId}</Heading>
+          <Tag type={statusToTagName[status]}>{status}</Tag>
         </HeadingGroup>
         <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
       </Row>
 
-      <BookingDataBox booking={booking} />
+      <BookingDataBox transaction={singleTransaction} />
 
-      <ButtonGroup>
+      {/* <ButtonGroup>
         {status === 'unconfirmed' && (
           <Button onClick={() => navigate(`/checkin/${bookingId}`)}>
             Check in
@@ -92,7 +95,7 @@ function BookingDetail() {
         <Button variation='secondary' onClick={moveBack}>
           Back
         </Button>
-      </ButtonGroup>
+      </ButtonGroup> */}
     </>
   );
 }

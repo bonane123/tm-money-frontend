@@ -3,50 +3,60 @@ import {
   HiOutlineBriefcase,
   HiOutlineCalendarDays,
   HiOutlineChartBar,
-} from 'react-icons/hi2';
-import Stat from '../../features/dashboard/Stat';
-import { formatCurrency } from '../../utils/helpers';
+} from "react-icons/hi2";
+import Stat from "../../features/dashboard/Stat";
+import { formatCurrency } from "../../utils/helpers";
 
-function Stats({ bookings, confirmedStays, numDays, cabinCount }) {
+function Stats({ transactions }) {
+
   // 1.
-  const numBookings = bookings.length;
+  const numTransactions = transactions.results;
 
   // 2.
-  const sales = bookings.reduce((acc, cur) => acc + cur.totalPrice, 0);
-
+  const sales = transactions.data.transactions.reduce(
+    (acc, cur) => acc + cur.amountToSend,
+    0
+  );
   // 3.
-  const checkins = confirmedStays.length;
+
+  const pendingTransactions = transactions.data.transactions.filter(
+    (transaction) => transaction.status === "pending"
+  );
+
+  const numberOfPendingTransactions = pendingTransactions.length;
 
   // 4.
-  const occupation =
-    confirmedStays.reduce((acc, cur) => acc + cur.numNights, 0) /
-    (numDays * cabinCount);
+  const confirmedTransactions = transactions.data.transactions.filter(
+    (transaction) => transaction.status === "confirmed"
+  );
+
+  const numberOfConfirmedTransactions = confirmedTransactions.length;
 
   return (
     <>
       <Stat
-        title='Bookings'
-        color='blue'
+        title="Transactions"
+        color="blue"
         icon={<HiOutlineBriefcase />}
-        value={numBookings}
+        value={numTransactions}
       />
       <Stat
-        title='Sales'
-        color='green'
+        title="Amounts"
+        color="green"
         icon={<HiOutlineBanknotes />}
         value={formatCurrency(sales)}
       />
       <Stat
-        title='Check ins'
-        color='indigo'
+        title="Pendings"
+        color="indigo"
         icon={<HiOutlineCalendarDays />}
-        value={checkins}
+        value={numberOfPendingTransactions}
       />
       <Stat
-        title='Occupancy rate'
-        color='yellow'
+        title="Confirmed Transactions"
+        color="yellow"
         icon={<HiOutlineChartBar />}
-        value={Math.round(occupation * 100) + '%'}
+        value={numberOfConfirmedTransactions}
       />
     </>
   );

@@ -69,7 +69,7 @@ function SendForm() {
 
   // Function to handle currency conversion
   var myHeaders = new Headers();
-  myHeaders.append('apikey', 'RDt2npcGu4QVGOkuX7UwQsxlXMpj140q');
+  myHeaders.append('apikey', 'Z3j2e55HJl4Y9IT767CZ2HulW3Y7rGQK');
 
   var requestOptions = {
     method: 'GET',

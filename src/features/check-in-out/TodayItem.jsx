@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 
 const StyledTodayItem = styled.li`
   display: grid;
-  grid-template-columns: 9rem 2rem 1fr 7rem 9rem;
-  gap: 1.2rem;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 1rem;
   align-items: center;
 
   font-size: 1.4rem;
@@ -24,26 +24,29 @@ const Guest = styled.div`
   font-weight: 500;
 `;
 function TodayItem({ activity }) {
-  const { id, status, guests, numNights } = activity;
+  const { receiverFirstName, receiverLastName, status, receiverGets, destinationCurrency, destinationCountry, destinationAccountDetails} = activity;
   return (
     <StyledTodayItem>
-      {status === 'unconfirmed' && <Tag type='green'>Arriving</Tag>}
-      {status === 'checked-in' && <Tag type='blue'>Departing</Tag>}
-      <Flag src={guests.countryFlag} alt={`Flag of ${guests.country}`} />
-      <Guest>{guests.fullName}</Guest>
-      <div>{numNights}</div>
+      {status === 'pending' && <Tag type='green'>Unconfirmed</Tag>}
+      {status === 'confirmed' && <Tag type='blue'>Departing</Tag>}
+      {/* <Flag src={guests.countryFlag} alt={`Flag of ${guests.country}`} /> */}
+      <Guest>{receiverFirstName}</Guest>
+      <Guest>{receiverLastName}</Guest>
+      <div>{receiverGets} {destinationCurrency}</div>
+      <div>{destinationCountry}</div>
+      <div>{destinationAccountDetails}</div>
 
-      {status === 'unconfirmed' && (
+      {status === 'pending' && (
         <Button
           size='small'
           variation='primary'
           as={Link}
-          to={`/checkin/${id}`}
+          // to={`/checkin/${id}`}
         >
-          Check in
+          Confirm
         </Button>
       )}
-      {status === 'checked-in' && <CheckoutButton bookingId={id} />}
+      {status === 'confirmed' && <CheckoutButton />}
     </StyledTodayItem>
   );
 }

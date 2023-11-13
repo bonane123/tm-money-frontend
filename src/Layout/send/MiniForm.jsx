@@ -74,9 +74,17 @@ function MiniForm({formData, answer}) {
 
   // console.log(selectedCurrency)
 
-  const senderAmount = parseFloat(formData['amount-to-send']) || 0;
-  const transferFees = parseFloat(formData['receiver-gets']) || 0;
+  const senderAmount = parseFloat(formData['amountToSend']) || 0;
+  const transferFees = parseFloat(formData['transferFees']) || 0;
+  const percentageCharges = formData['percentageCharges'];
   const receiverAmount =senderAmount - transferFees;
+
+  let newCharge = '';
+  if (percentageCharges === 5000){
+    newCharge = `KRW ${percentageCharges}`
+  }
+  else newCharge = `${percentageCharges * 100}%`;
+  
   return (
     <StyledMiniForm>
       <StyledH2>YOUR INVOICE WILL LOOK LIKE THIS</StyledH2>
@@ -111,12 +119,12 @@ function MiniForm({formData, answer}) {
             <p>Transfer Fees: </p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>Flat fee: {transferFees}</p>
-            <p>Percentage fee: 0%</p>
+            <p>Flat fee: KRW {transferFees.toFixed(2)}</p>
+            <p>Percentage fee: {newCharge}</p>
           </StyledLeftDiv>
         </StyledDateTime>
       </StyledTransfer>
-      <StyledH3>After fees: KRW 0</StyledH3>
+      <StyledH3>After fees:</StyledH3>
       <StyledDateTime>
         <StyledRightDiv>
           <p>Exchange Rate:</p>
@@ -130,7 +138,7 @@ function MiniForm({formData, answer}) {
           <p>Recipient Gets:</p>
         </StyledRightSpecial>
         <StyledLeftSpecial>
-          <p>{destinationCurrency} {parseFloat(receiverAmount).toFixed(2)}</p>
+          <p>{destinationCurrency} {(parseFloat(receiverAmount) * answer).toFixed(2)}</p>
         </StyledLeftSpecial>
       </StyledDateTime>
       <StyledRemark>

@@ -4,6 +4,7 @@ import {
   HiOutlineCog6Tooth,
   HiOutlineHome,
   HiOutlineHomeModern,
+  HiOutlineUser,
   HiOutlineUsers,
 } from 'react-icons/hi2';
 import { AiOutlineTransaction } from 'react-icons/ai';
@@ -65,21 +66,21 @@ function MainNav() {
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to='/bookings'>
+          <StyledNavLink to='/transactions'>
             <AiOutlineTransaction />
             Transactions
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to='/cabins'>
-            <FaFileInvoiceDollar />
-            Invoices
+          <StyledNavLink to='/all-users'>
+            <HiOutlineUsers />
+            List of Users
           </StyledNavLink>
         </li>
         <li>
           <StyledNavLink to='/users'>
-            <HiOutlineUsers />
-            Users
+            <HiOutlineUser />
+            User
           </StyledNavLink>
         </li>
         <li>

@@ -13,9 +13,9 @@ function SignupForm() {
   const { register, formState, getValues, handleSubmit, reset } = useForm();
   const { errors } = formState;
 
-  function onSubmit({ fullName, email, password }) {
+  function onSubmit({ fullName, email, password, passwordConfirm }) {
     signup(
-      { fullName, email, password },
+      { fullName, email, password, passwordConfirm},
       {
         onSettled: reset,
       }
