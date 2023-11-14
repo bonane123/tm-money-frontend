@@ -4,13 +4,16 @@ import {
   HiOutlineChatBubbleBottomCenterText,
   HiOutlineCheckCircle,
   HiOutlineCurrencyDollar,
-  HiOutlineHomeModern,
 } from "react-icons/hi2";
+
+import {MdEmojiFlags} from 'react-icons/md'
 
 import DataItem from "../../ui/DataItem";
 // import { Flag } from "../../ui/Flag";
 
 import { formatDistanceFromNow, formatCurrency } from "../../utils/helpers";
+import { AiOutlineTransaction } from "react-icons/ai";
+import { FaPercent } from "react-icons/fa";
 
 const StyledBookingDataBox = styled.section`
   /* Box */
@@ -124,11 +127,18 @@ function BookingDataBox({ transaction }) {
     user,
   } = transaction;
 
+  let newPercentage = '';
+
+  if (percentageCharges === 5000){
+    newPercentage = `${formatCurrency(percentageCharges)}`
+  }
+  else newPercentage = `${percentageCharges}%`
+
   return (
     <StyledBookingDataBox>
       <Header>
         <div>
-          <HiOutlineHomeModern />
+          <AiOutlineTransaction />
           <p>
             {user.fullName} Transfer money to <Span>{receiverLastName} {receiverFirstName}</Span>
           </p>
@@ -146,43 +156,60 @@ function BookingDataBox({ transaction }) {
       <Section>
         <Guest>
           <p>
-            {/* {guestName} {numGuests > 1 ? `+ ${numGuests - 1} guests` : ""} */}
+            Destination Information
           </p>
           <span>&bull;</span>
-          <p>{user.email}</p>
+          <p>{destinationAccount}</p>
           <span>&bull;</span>
-          <p>National ID {user.fullName}</p>
+          <p>Account Details {destinationAccountDetails}</p>
+        </Guest>
+        <Guest>
+          <p>
+            Reciever Information 
+          </p>
+          <span>&bull;</span>
+          <p>{receiverLastName}</p>
+          <p> {receiverFirstName}</p>
         </Guest>
 
-        {/* {observations && (
+        
           <DataItem
-            icon={<HiOutlineChatBubbleBottomCenterText />}
-            label="Observations"
+            icon={<FaPercent />}
+            label="Percentage rate"
           >
-            {observations}
+           {newPercentage}
           </DataItem>
-        )} */}
+        
+          <DataItem
+            icon={<MdEmojiFlags />}
+            label="Country"
+          >
+           <p>&ndash;</p> {destinationCountry}
+          </DataItem>
 
-        {/* <DataItem icon={<HiOutlineCheckCircle />} label="Breakfast included?">
-          {hasBreakfast ? "Yes" : "No"}
-        </DataItem> */}
 
-        <Price isPaid={status}>
-          <DataItem icon={<HiOutlineCurrencyDollar />} label={`Total price`}>
+        <DataItem icon={<HiOutlineCheckCircle />} label="Transfer Fees">
+         {formatCurrency(transferFees)} 
+        </DataItem>
+
+        <Price >
+          <DataItem icon={<HiOutlineCurrencyDollar />} label={`Total Send`}>
             {formatCurrency(amountToSend)}
-
-            {/* {hasBreakfast &&
-              ` (${formatCurrency(cabinPrice)} cabin + ${formatCurrency(
-                extrasPrice
-              )} breakfast)`} */}
           </DataItem>
 
-          {/* <p>{isPaid ? "Paid" : "Will pay at property"}</p> */}
+          <p>Deposited Amount</p>
+        </Price>
+        <Price isPaid={status}>
+          <DataItem icon={<HiOutlineCurrencyDollar />} label={`Total Received`}>
+            {receiverGets.toLocaleString()} {destinationCurrency}
+          </DataItem>
+
+          <p>Receiver Amount</p>
         </Price>
       </Section>
 
       <Footer>
-        <p>Booked {format(new Date(createdAt), "EEE, MMM dd yyyy, p")}</p>
+        <p>Transfered {format(new Date(createdAt), "EEE, MMM dd yyyy, p")}</p>
       </Footer>
     </StyledBookingDataBox>
   );

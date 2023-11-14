@@ -1,20 +1,19 @@
-import styled from 'styled-components';
-import BookingDataBox from '../../features/bookings/BookingDataBox';
+import styled from "styled-components";
+import BookingDataBox from "../../features/bookings/BookingDataBox";
 
-import Row from '../../ui/Row';
-import Heading from '../../ui/Heading';
-import ButtonGroup from '../../ui/ButtonGroup';
-import Button from '../../ui/Button';
-import ButtonText from '../../ui/ButtonText';
+import Row from "../../ui/Row";
+import Heading from "../../ui/Heading";
+import ButtonGroup from "../../ui/ButtonGroup";
+import Button from "../../ui/Button";
+import ButtonText from "../../ui/ButtonText";
 
-import { useMoveBack } from '../../hooks/useMoveBack';
-import { useBooking } from '../bookings/useBooking';
-import Spinner from '../../ui/Spinner';
-import { useEffect, useState } from 'react';
-import Checkbox from '../../ui/Checkbox';
-import { formatCurrency } from '../../utils/helpers';
-import { useCheckin } from './useCheckin';
-import { useSettings } from '../settings/useSettings';
+import { useMoveBack } from "../../hooks/useMoveBack";
+import Spinner from "../../ui/Spinner";
+import { useEffect, useState } from "react";
+import Checkbox from "../../ui/Checkbox";
+import { formatCurrency } from "../../utils/helpers";
+import { useTransaction } from "../transactions/useTransaction";
+import { useUpdateTransaction } from "./useUpdateTransaction";
 
 const Box = styled.div`
   /* Box */
@@ -26,55 +25,61 @@ const Box = styled.div`
 
 function CheckinBooking() {
   const [confirmPaid, setConfirmPaid] = useState(false);
-  const [addBreakfast, setAddBreakfast] = useState(false);
-  const { booking, isLoading } = useBooking();
-  const { settings, isLoading: isLoadingSettings } = useSettings();
+  const { transaction, isLoading } = useTransaction();
+  // const { settings, isLoading: isLoadingSettings } = useSettings();
 
-  useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
+  useEffect(
+    () => setConfirmPaid(transaction?.data?.transaction?.isPaid ?? false),
+    [transaction]
+  );
 
   const moveBack = useMoveBack();
-  const { checkin, isCheckingIn } = useCheckin();
+  // const {updatedTransaction, isConfirmed} = useUpdateTransaction()
 
-  if (isLoading || isLoadingSettings) return <Spinner />;
+  // console.log(updatedTransaction)
+
+  if (isLoading) return <Spinner />;
+
+  const singleTransaction = transaction.data.transaction;
 
   const {
-    id: bookingId,
-    guests,
-    totalPrice,
-    numGuests,
-    hasBreakfast,
-    numNights,
-  } = booking;
+    id: transactionId,
+    amountToSend,
+    destinationCurrency,
+    receiverGets,
+    user,
+  } = singleTransaction;
 
-  const optionalBreakfastPrice =
-    settings.breakfastPrice * numNights * numGuests;
+  // const optionalBreakfastPrice =
+  //   settings.breakfastPrice * numNights * numGuests;
 
-  function handleCheckin() {
-    if (!confirm) return;
+  // function handleTransactionUpdate() {
+  //   if (!confirm) return;
 
-    if (addBreakfast) {
-      checkin({
-        bookingId,
-        breakfast: {
-          hasBreakfast: true,
-          extrasPrice: optionalBreakfastPrice,
-          totalPrice: totalPrice + optionalBreakfastPrice,
-        },
-      });
-    } else {
-      checkin({ bookingId, breakfast: {} });
-    }
-  }
+  //   updatedTransaction(transactionId)
+  //   if (addBreakfast) {
+  //     checkin({
+  //       tra,
+  //       breakfast: {
+  //         hasBreakfast: true,
+  //         extrasPrice: optionalBreakfastPrice,
+  //         totalPrice: totalPrice + optionalBreakfastPrice,
+  //       },
+  //     });
+  //   } else {
+  //     checkin({ bookingId, breakfast: {} });
+  //   }
+  // }
 
   return (
     <>
-      <Row type='horizontal'>
-        <Heading as='h1'>Check in booking #{bookingId}</Heading>
+      <Row type="horizontal">
+        <Heading as="h1">Confirm transaction #{transactionId}</Heading>
         <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
       </Row>
 
-      <BookingDataBox booking={booking} />
-
+      <BookingDataBox transaction={singleTransaction} />
+      {/* 
       {!hasBreakfast && (
         <Box>
           <Checkbox
@@ -95,30 +100,29 @@ function CheckinBooking() {
                 )})`}
           </Checkbox>
         </Box>
-      )}
+      )} */}
 
       <Box>
         <Checkbox
           checked={confirmPaid}
-          disabled={confirmPaid || isCheckingIn}
+          disabled={confirmPaid}
           onChange={() => setConfirmPaid((confirm) => !confirm)}
-          id='confirm'
+          id="confirm"
         >
-          I confirm that {guests.fullName} has paid the total amount of{' '}
-          {formatCurrency(totalPrice)}
+          I confirm that {user.fullName} has paid the total amount of{" "}
+          {formatCurrency(amountToSend)}
         </Checkbox>
       </Box>
 
       <ButtonGroup>
-        <Button onClick={handleCheckin} disabled={!confirmPaid || isCheckingIn}>
-          Check in booking #{bookingId}
+        <Button disabled={!confirmPaid}>
+          Confirm to send {receiverGets.toLocaleString()} {destinationCurrency}
         </Button>
-        <Button variation='secondary' onClick={moveBack}>
+        <Button variation="secondary" onClick={moveBack}>
           Back
         </Button>
       </ButtonGroup>
     </>
   );
 }
-
 export default CheckinBooking;

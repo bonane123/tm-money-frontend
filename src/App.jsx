@@ -60,7 +60,7 @@ function App() {
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="transactions" element={<Transactions />} />
                     <Route path="transactions/:TransactionId" element={<Booking />} />
-                    <Route path="checkin/:bookingId" element={<Checkin />} />
+                    <Route path="confirm/:TransactionId" element={<Checkin />} />
                     <Route path="all-users" element={<UsersList />} />
                     <Route path="users" element={<Users />} />
                     <Route path="settings" element={<Settings />} />

@@ -87,3 +87,31 @@ export const createTransaction = async ({ transaction }) => {
     console.log(error);
   }
 };
+export const updateTransaction = async ( transactionId, {...transaction }) => {
+  const dataToUpdate = {
+    id: transactionId,
+    data: {...transaction},
+  };
+  console.log(transactionId)
+  try {
+    const response = await fetch(`${URL}/transactions/${transactionId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedValue.token}`,
+      },
+      body: JSON.stringify(dataToUpdate),
+    });
+
+    if (!response.ok) {
+      console.log(`HTTP Error status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data)
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

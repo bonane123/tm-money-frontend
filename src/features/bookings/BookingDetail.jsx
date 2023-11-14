@@ -43,8 +43,7 @@ function BookingDetail() {
 
   const statusToTagName = {
     pending: 'blue',
-    'checked-in': 'green',
-    'checked-out': 'silver',
+    confirmed: 'green',
   };
 
   return (
@@ -59,29 +58,19 @@ function BookingDetail() {
 
       <BookingDataBox transaction={singleTransaction} />
 
-      {/* <ButtonGroup>
-        {status === 'unconfirmed' && (
-          <Button onClick={() => navigate(`/checkin/${bookingId}`)}>
-            Check in
-          </Button>
-        )}
-
-        {status === 'checked-in' && (
-          <Button
-            icon={<HiArrowUpOnSquare />}
-            disabled={isCheckingOut}
-            onClick={() => checkout(bookingId)}
-          >
-            Check out
+      <ButtonGroup>
+        {status === 'pending' && (
+          <Button onClick={() => navigate(`/confirm/${transactionId}`)}>
+            Confirm
           </Button>
         )}
 
         <Modal>
           <Modal.Open opens='delete'>
-            <Button variation='danger'>Delete booking</Button>
+            <Button variation='danger'>Delete Transaction</Button>
           </Modal.Open>
 
-          <Modal.Window name='delete'>
+          {/* <Modal.Window name='delete'>
             <ConfirmDelete
               resourceName='bookings'
               disabled={isDeletingBooking}
@@ -89,13 +78,13 @@ function BookingDetail() {
                 deleteBooking(bookingId, { onSettled: () => navigate(-1) })
               }
             />
-          </Modal.Window>
+          </Modal.Window> */}
         </Modal>
 
         <Button variation='secondary' onClick={moveBack}>
           Back
         </Button>
-      </ButtonGroup> */}
+      </ButtonGroup>
     </>
   );
 }

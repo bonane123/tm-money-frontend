@@ -72,8 +72,7 @@ function TransactionRow({
 
   const statusToTagName = {
     pending: "yellow",
-    "checked-in": "green",
-    "checked-out": "silver",
+    confirmed: "green",
   };
 
   return (
@@ -104,7 +103,7 @@ function TransactionRow({
 
       <Tag type={statusToTagName[status]}>{status}</Tag>
 
-      <Amount>{receiverGets} {destinationCurrency}</Amount>
+      <Amount>{receiverGets.toLocaleString()} {destinationCurrency}</Amount>
       <Amount>{formatCurrency(transferFees)}</Amount>
 
       <Modal>
