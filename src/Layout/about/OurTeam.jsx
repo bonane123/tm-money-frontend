@@ -50,6 +50,9 @@ const PersonDesc = styled.p`
   }
 `;
 
+const StyledH2 = styled.h2``;
+const StyledP = styled.p``;
+
 const userData = [
   {
     id: '1',
@@ -74,11 +77,11 @@ const userData = [
 function OurTeam() {
   return (
     <StyledTeam>
-      <h2>Our Team</h2>
-      <p>
+      <StyledH2>Our Team</StyledH2>
+      <StyledP>
         Our team consist of talented individuals dedicated to customer
         satisfaction.
-      </p>
+      </StyledP>
       <StyledPersons>
         {userData.map((user) => (
           <StyledUser key={user.id}>

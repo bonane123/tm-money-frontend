@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import Tag from "../../ui/Tag";
 import Button from "../../ui/Button";
-import CheckoutButton from "./CheckoutButton";
+// import CheckoutButton from "./CheckoutButton";
 import { Link } from "react-router-dom";
+import CheckoutButton from "../../features/check-in-out/CheckoutButton";
+import { format } from "date-fns";
 
-const StyledTodayItem = styled.li`
+const StyledTransactionRow = styled.li`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 1rem;
@@ -22,7 +24,7 @@ const StyledTodayItem = styled.li`
 const Guest = styled.div`
   font-weight: 500;
 `;
-function TodayItem({ activity }) {
+function TransactionRow({ activity }) {
   const {
     id,
     receiverFirstName,
@@ -32,32 +34,22 @@ function TodayItem({ activity }) {
     destinationCurrency,
     destinationCountry,
     destinationAccountDetails,
+    createdAt,
   } = activity;
   return (
-    <StyledTodayItem>
-      {status === "pending" && <Tag type="blue">Unconfirmed</Tag>}
+    <StyledTransactionRow>
+      {status === "pending" && <Tag type="yellow">Pending</Tag>}
       {status === "confirmed" && <Tag type="green">Confirmed</Tag>}
       <Guest>{receiverFirstName}</Guest>
       <Guest>{receiverLastName}</Guest>
+      <div>{format(new Date(createdAt), "MMM dd yyyy")}</div>
       <div>
         {receiverGets.toLocaleString()} {destinationCurrency}
       </div>
       <div>{destinationCountry}</div>
       <div>{destinationAccountDetails}</div>
-
-      {status === "pending" && (
-        <Button
-          size="small"
-          variation="primary"
-          as={Link}
-          to={`/confirm/${id}`}
-        >
-          Confirm
-        </Button>
-      )}
-      {status === "confirmed" && <CheckoutButton transactionId={id} />}
-    </StyledTodayItem>
+    </StyledTransactionRow>
   );
 }
 
-export default TodayItem;
+export default TransactionRow;

@@ -26,11 +26,10 @@ const StyledNavLink = styled(NavLink)`
     color: var(--color-grey-600);
     font-size: 1.6rem;
     font-weight: 500;
-    padding: 1.2rem 2.4rem;
+    padding: 1.2rem 2rem;
     transition: all 0.3s;
   }
 `;
-
 
 function HeaderMenu({ isOpen }) {
   const storedValue = getAuthToken();
@@ -47,6 +46,9 @@ function HeaderMenu({ isOpen }) {
         <li>
           <StyledNavLink to="/send">Send Money</StyledNavLink>
         </li>
+        <li>
+        <StyledNavLink to="/reviews">Reviews</StyledNavLink>
+      </li>
         <li>
           <StyledNavLink to="/login">Login</StyledNavLink>
         </li>
@@ -69,22 +71,20 @@ function HeaderMenu({ isOpen }) {
         <StyledNavLink to="/send">Send Money</StyledNavLink>
       </li>
 
-      {storedValue.data.user.role === "user" ? (
-        <li>
-          <StyledNavLink to="/reviews">Reviews</StyledNavLink>
-        </li>
-      ) : (
-        ""
-      )}
-      {storedValue.data.user.role === "admin" ? (
+      <li>
+        <StyledNavLink to="/reviews">Reviews</StyledNavLink>
+      </li>
+      <li>
+        <StyledNavLink to="/transactions/users">History</StyledNavLink>
+      </li>
+
+      {storedValue.data.user.role === "admin" && (
         <li>
           <StyledNavLink to="/dashboard">Dashboard</StyledNavLink>
         </li>
-      ) : (
-        ""
       )}
       <li>
-        <Logout/>
+        <Logout />
       </li>
       <li style={{ paddingLeft: "1.2rem" }}>
         <DarkModeToggle />

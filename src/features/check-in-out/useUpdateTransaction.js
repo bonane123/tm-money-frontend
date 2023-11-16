@@ -8,15 +8,16 @@ export function useUpdateTransaction() {
   const navigate = useNavigate();
 
   const { mutate: updatedTransaction, isLoading: isConfirmed } = useMutation({
-    mutationFn: ({ transactionId}) =>
+    mutationKey: 'updateTransaction',
+    mutationFn: (transactionId) =>
       updateTransaction(transactionId, {
         status: 'confirmed',
         isPaid: true,
       }),
     onSuccess: (data) => {
-      toast.success(`Transaction #${data.id} successfully confirmed`);
+      toast.success(`Transaction #${data.data.transaction.id} successfully confirmed`);
       queryClient.invalidateQueries({ active: true });
-      navigate('/');
+      navigate('/transactions');
     },
     onError: () => {
       toast.error('There was an error while checking in');

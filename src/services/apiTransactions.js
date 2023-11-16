@@ -23,6 +23,31 @@ export const getTransactions = async () => {
     console.log(error);
   }
 };
+export const getUsersTransactions = async (userId) => {
+  try {
+    const response = await fetch(
+      `${URL}/transactions/users/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedValue.token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log(`HTTP Error status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // console.log(data)
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getToDaysTransactions = async () => {
   try {
     const response = await fetch(`${URL}/transactions/today`, {
@@ -43,9 +68,9 @@ export const getToDaysTransactions = async () => {
     console.log(error);
   }
 };
-export const getTransaction = async (TransactionId) => {
+export const getTransaction = async (transactionId) => {
   try {
-    const response = await fetch(`${URL}/transactions/${TransactionId}`, {
+    const response = await fetch(`${URL}/transactions/${transactionId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +90,7 @@ export const getTransaction = async (TransactionId) => {
 };
 
 export const createTransaction = async ({ transaction }) => {
-    console.log(transaction)
+  console.log(transaction);
   try {
     const response = await fetch(`${URL}/transactions`, {
       method: "POST",
@@ -73,7 +98,7 @@ export const createTransaction = async ({ transaction }) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${storedValue.token}`,
       },
-      body: JSON.stringify({...transaction}),
+      body: JSON.stringify({ ...transaction }),
     });
 
     if (!response.ok) {
@@ -87,12 +112,8 @@ export const createTransaction = async ({ transaction }) => {
     console.log(error);
   }
 };
-export const updateTransaction = async ( transactionId, {...transaction }) => {
-  const dataToUpdate = {
-    id: transactionId,
-    data: {...transaction},
-  };
-  console.log(transactionId)
+export const updateTransaction = async (transactionId, transaction) => {
+  console.log(transactionId);
   try {
     const response = await fetch(`${URL}/transactions/${transactionId}`, {
       method: "PATCH",
@@ -100,7 +121,7 @@ export const updateTransaction = async ( transactionId, {...transaction }) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${storedValue.token}`,
       },
-      body: JSON.stringify(dataToUpdate),
+      body: JSON.stringify(transaction),
     });
 
     if (!response.ok) {
@@ -108,7 +129,7 @@ export const updateTransaction = async ( transactionId, {...transaction }) => {
     }
 
     const data = await response.json();
-    console.log(data)
+    console.log(data);
 
     return data;
   } catch (error) {

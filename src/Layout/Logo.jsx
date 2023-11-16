@@ -7,7 +7,7 @@ const StyledImage = styled.div`
 function Logo() {
     return (
       <StyledImage>
-        <img src='nobglogo.png' alt='logo' />
+        <img src='./nobglogo.png' alt='logo' />
       </StyledImage>
     );
 }

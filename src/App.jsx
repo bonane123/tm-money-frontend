@@ -25,6 +25,10 @@ import AppLayout from "./ui/AppLayout";
 import Login from "./pages/Login";
 import Transactions from "./pages/Transactions";
 import UsersList from "./pages/UsersList";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
+import Cabins from "./pages/Reviews";
+import TransactionsHistory from "./pages/TransactionsHistory";
+// import { GoogleOAuthProvider } from '@react-oauth/google';
 // import ProtectedDashboard from './utils/ProtectedDashboard';
 
 const queryClient = new QueryClient({
@@ -37,65 +41,74 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-
-      return (
-      <DarkModeProvider>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <GlobalStyles />
-          <BrowserRouter>
-            <Routes>
-              <Route element={<UserLayout />}>
-                <Route index element={<HomePage />} />
-                <Route path="about" element={<AboutPage />} />
-                <Route element={<ProtectedRoute role="user" />}>
-                  <Route path="reviews" element={<HelpPage />} />
-                </Route>
+  return (
+    <DarkModeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <GlobalStyles />
+        {/* <GoogleOAuthProvider clientId="53789141681-1otmrguobqm7upt97kh8gceso0uq66rl.apps.googleusercontent.com"> */}
+        <BrowserRouter>
+          <Routes>
+            <Route element={<UserLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="about" element={<AboutPage />} />
+              <Route path="reviews" element={<HelpPage />} />
+              <Route element={<ProtectedRoute role="user" />}>
                 <Route path="send" element={<SendMoney />} />
-                <Route path="fqas" element={<FqasPage />} />
-                <Route path="*" element={<PageNotFound />} />
+                <Route path="transactions/users" element={<TransactionsHistory />} />
+              </Route>
+              <Route path="fqas" element={<FqasPage />} />
+              <Route path="*" element={<PageNotFound />} />
 
-                <Route element={<AppLayout />}>
-                  <Route element={<ProtectedRoute role="admin" />}>
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="transactions" element={<Transactions />} />
-                    <Route path="transactions/:TransactionId" element={<Booking />} />
-                    <Route path="confirm/:TransactionId" element={<Checkin />} />
-                    <Route path="all-users" element={<UsersList />} />
-                    <Route path="users" element={<Users />} />
-                    <Route path="settings" element={<Settings />} />
-                    <Route path="account" element={<Account />} />
-                  </Route>
+              <Route element={<AppLayout />}>
+                <Route element={<ProtectedRoute role="admin" />}>
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="transactions" element={<Transactions />} />
+                  <Route
+                    path="transactions/:TransactionId"
+                    element={<Booking />}
+                  />
+                  <Route path="confirm/:TransactionId" element={<Checkin />} />
+                  <Route path="all-users" element={<UsersList />} />
+                  <Route path="all-reviews" element={<Cabins />} />
+                  <Route path="users" element={<Users />} />
+                  <Route path="charges" element={<Settings />} />
+                  <Route path="account" element={<Account />} />
                 </Route>
               </Route>
-              <Route path="/login" element={<Login />} />
-                <Route path="signup" element={<SignUp />} />
-
-            </Routes>
-          </BrowserRouter>
-          <Toaster
-            position="top-center"
-            gutter={12}
-            containerStyle={{ margin: "8px" }}
-            toastOptions={{
-              success: {
-                duration: 3000,
-              },
-              error: {
-                duration: 5000,
-              },
-              style: {
-                fontSize: "16px",
-                maxWidth: "500px",
-                padding: "16px 24px",
-                backgroundColor: "var(--color-grey-0)",
-                color: "var(--color-grey-700)",
-              },
-            }}
-          />
-        </QueryClientProvider>
-      </DarkModeProvider>
-    );
+            </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route
+              path="/:userId/verify/:token"
+              element={<VerifyEmailPage />}
+            />
+          </Routes>
+        </BrowserRouter>
+        {/* </GoogleOAuthProvider> */}
+        <Toaster
+          position="top-center"
+          gutter={12}
+          containerStyle={{ margin: "8px" }}
+          toastOptions={{
+            success: {
+              duration: 3000,
+            },
+            error: {
+              duration: 5000,
+            },
+            style: {
+              fontSize: "16px",
+              maxWidth: "500px",
+              padding: "16px 24px",
+              backgroundColor: "var(--color-grey-0)",
+              color: "var(--color-grey-700)",
+            },
+          }}
+        />
+      </QueryClientProvider>
+    </DarkModeProvider>
+  );
 }
 
 export default App;

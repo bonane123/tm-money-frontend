@@ -5,6 +5,7 @@ import Spinner from "../../ui/Spinner";
 import { useForm } from "react-hook-form";
 import { useCreateReview } from "../../features/reviews/useCreateReview";
 import { useState } from "react";
+import { getAuthToken } from "../../utils/auth";
 
 const StyleReview = styled.div`
   height: 35rem;
@@ -78,12 +79,21 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
+const StyledH3 = styled.h3`
+color: var(--color-orange-700);
+`;
+
 function PostReview() {
   const { user, isLoading } = useUser();
   const [rating, setRating] = useState(0)
   const { register, formState, handleSubmit, reset } = useForm();
   const { createNewReview, isLoading: isReviewLoading } = useCreateReview(reset);
   const { errors } = formState;
+  const storedValue = getAuthToken();
+
+  if (!storedValue) {
+    return <StyledH3>Login in order to Post Review</StyledH3>
+  }
 
   if (isLoading) {
     return <Spinner />;
@@ -103,6 +113,7 @@ function PostReview() {
   }
   return (
     <StyleReview>
+      
       <ReviewForm onSubmit={handleSubmit(onSubmit)}>
         <StyledTextAreaDiv>
           <label>Your Feedback</label>

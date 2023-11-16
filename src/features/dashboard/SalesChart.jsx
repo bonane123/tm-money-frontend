@@ -97,8 +97,7 @@ function SalesChart({ transactions }) {
   return (
     <StyledSalesChart>
       <Heading as="h2">
-        Sales
-        Sales from {format(allDates.at(0), 'MMM dd yyyy')} &mdash;{' '}
+        Transfers from {format(allDates.at(0), 'MMM dd yyyy')} &mdash;{' '}
         {format(allDates.at(-1), 'MMM dd yyyy')}
       </Heading>
       <ResponsiveContainer height={300} width="100%">
@@ -121,7 +120,7 @@ function SalesChart({ transactions }) {
             stroke={colors.totalTransfers.stroke}
             fill={colors.totalTransfers.fill}
             strokeWidth={2}
-            name="Total Sales"
+            name="Total Transfer"
             unit="₩"
           />
           <Area
@@ -130,7 +129,7 @@ function SalesChart({ transactions }) {
             stroke={colors.transferFees.stroke}
             fill={colors.transferFees.fill}
             strokeWidth={2}
-            name="Extras Sales"
+            name="Income"
             unit="₩"
           />
         </AreaChart>

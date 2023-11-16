@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Heading from '../../ui/Heading';
 import Row from '../../ui/Row';
 import Spinner from '../../ui/Spinner';
-import TodayItem from './TodayItem';
-import { useToDaysTransactions } from '../transactions/useToDaysTransactions';
+import TodayItem from './ChargeItem';
+import { useSettings } from './useSettings';
 
 const StyledToday = styled.div`
   /* Box */
@@ -39,25 +39,26 @@ const NoActivity = styled.p`
   margin-top: 0.8rem;
 `;
 
-function TodayActivity() {
-  const {data, isLoading} = useToDaysTransactions()
+function ChargesList() {
+  const {charges, isLoading} = useSettings()
   if (isLoading) {
     return <Spinner />;
   }
+  console.log(charges)
   return (
     <StyledToday>
       <Row type='horizontal'>
-        <Heading as='h2'>Today</Heading>
+        <Heading as='h2'>Update Charges</Heading>
       </Row>
       {!isLoading ? (
-        data.data.transactions?.length > 0 ? (
+        charges?.length > 0 ? (
           <TodayList>
-            {data.data.transactions.map((activity) => (
+            {charges.map((activity) => (
               <TodayItem activity={activity} key={activity.id} />
             ))}
           </TodayList>
         ) : (
-          <NoActivity>No activity today...</NoActivity>
+          <NoActivity>No charges...</NoActivity>
         )
       ) : (
         <Spinner />
@@ -66,4 +67,4 @@ function TodayActivity() {
   );
 }
 
-export default TodayActivity;
+export default ChargesList;

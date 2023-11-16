@@ -1,6 +1,5 @@
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
-import TransactionTable from '../features/transactions/TransactionTable';
 import UsersTable from '../features/users/UsersTable';
 
 function UsersList() {

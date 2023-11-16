@@ -3,6 +3,7 @@ import { styled } from 'styled-components';
 import { AiFillYoutube, AiFillInstagram } from 'react-icons/ai';
 import { BsTwitter } from 'react-icons/bs';
 import { BiLogoLinkedin } from 'react-icons/bi';
+import { getAuthToken } from '../utils/auth';
 
 const StyledFooter = styled.footer`
   background-color: var(--color-grey-0);
@@ -72,12 +73,13 @@ const StyledNavLink = styled(Link)`
 `;
 
 function Footer() {
+  const storedValue = getAuthToken();
   return (
     <StyledFooter>
       <StyledUl>
         <StyledLink to='/'>Home</StyledLink>
         <StyledLink to='/about'>About Us</StyledLink>
-        <StyledLink to='/send'>Send Money</StyledLink>
+        {storedValue && <StyledLink to='/send'>Send Money</StyledLink>}
         <StyledLink to='/reviews'>Reviews</StyledLink>
         <StyledLink to='/fqas'>FAQs</StyledLink>
       </StyledUl>

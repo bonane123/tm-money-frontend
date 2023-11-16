@@ -84,7 +84,6 @@ function SendForm() {
         requestOptions
       );
       const data = await response.json();
-      console.log(data);
 
       setAnswer(data.result);
     } catch (error) {

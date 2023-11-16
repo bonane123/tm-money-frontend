@@ -8,7 +8,8 @@ import {
   HiOutlineUsers,
 } from 'react-icons/hi2';
 import { AiOutlineTransaction } from 'react-icons/ai';
-import { FaFileInvoiceDollar } from 'react-icons/fa';
+import { FiMessageCircle } from "react-icons/fi";
+
 
 const NavList = styled.ul`
   display: flex;
@@ -72,6 +73,12 @@ function MainNav() {
           </StyledNavLink>
         </li>
         <li>
+          <StyledNavLink to='/all-reviews'>
+            <FiMessageCircle />
+            All Reviews
+          </StyledNavLink>
+        </li>
+        <li>
           <StyledNavLink to='/all-users'>
             <HiOutlineUsers />
             List of Users
@@ -84,9 +91,9 @@ function MainNav() {
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to='/settings'>
+          <StyledNavLink to='/charges'>
             <HiOutlineCog6Tooth />
-            Settings
+            Charges
           </StyledNavLink>
         </li>
       </NavList>

@@ -9,7 +9,6 @@ export const getReviews = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${storedValue.token}`
       },
     });
 

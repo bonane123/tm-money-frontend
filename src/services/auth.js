@@ -26,6 +26,25 @@ export const login = async ({ email, password }) => {
     console.log(error);
   }
 };
+// export const googleAuth = async () => {
+//   try {
+//     const response = await fetch(`${URL}/users/auth/google`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       }
+//     });
+
+//     if (!response.ok) {
+//       console.log(`HTTP Error status: ${response.status}`);
+//     }
+
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 // SIGN UP API
 export const signup = async ({ fullName, email, password, passwordConfirm }) => {

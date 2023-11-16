@@ -34,9 +34,7 @@ function CheckinBooking() {
   );
 
   const moveBack = useMoveBack();
-  // const {updatedTransaction, isConfirmed} = useUpdateTransaction()
-
-  // console.log(updatedTransaction)
+  const {updatedTransaction, isConfirmed} = useUpdateTransaction()
 
   if (isLoading) return <Spinner />;
 
@@ -53,23 +51,11 @@ function CheckinBooking() {
   // const optionalBreakfastPrice =
   //   settings.breakfastPrice * numNights * numGuests;
 
-  // function handleTransactionUpdate() {
-  //   if (!confirm) return;
+  function handleTransactionUpdate() {
+    if (!confirm) return;
 
-  //   updatedTransaction(transactionId)
-  //   if (addBreakfast) {
-  //     checkin({
-  //       tra,
-  //       breakfast: {
-  //         hasBreakfast: true,
-  //         extrasPrice: optionalBreakfastPrice,
-  //         totalPrice: totalPrice + optionalBreakfastPrice,
-  //       },
-  //     });
-  //   } else {
-  //     checkin({ bookingId, breakfast: {} });
-  //   }
-  // }
+    updatedTransaction(transactionId)
+  }
 
   return (
     <>
@@ -105,7 +91,7 @@ function CheckinBooking() {
       <Box>
         <Checkbox
           checked={confirmPaid}
-          disabled={confirmPaid}
+          disabled={confirmPaid || isConfirmed}
           onChange={() => setConfirmPaid((confirm) => !confirm)}
           id="confirm"
         >
@@ -115,7 +101,7 @@ function CheckinBooking() {
       </Box>
 
       <ButtonGroup>
-        <Button disabled={!confirmPaid}>
+        <Button onClick={handleTransactionUpdate} disabled={!confirmPaid || isConfirmed}>
           Confirm to send {receiverGets.toLocaleString()} {destinationCurrency}
         </Button>
         <Button variation="secondary" onClick={moveBack}>

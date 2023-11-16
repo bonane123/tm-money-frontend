@@ -7,6 +7,7 @@ import Spinner from "../../ui/Spinner";
 import { useUser } from "../../features/authentication/useUser";
 import { useCreateTransaction } from "../../features/transactions/useCreateTransaction";
 import { useNavigate } from "react-router-dom";
+import SpinnerMini from "../../ui/SpinnerMini";
 
 const StyledForm = styled.form`
   /* background-color: #152238; */
@@ -124,7 +125,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   if (isChargesLoading) {
     return <Spinner />;
   }
-  if(isLoading) {
+  if (isLoading) {
     return <Spinner />;
   }
 
@@ -295,9 +296,13 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
         </StyledName>
       </StyledNames>
       <div>
-        <StyledSendButton type="submit" disabled={isTransactionLoading}>
-          Send Money
-        </StyledSendButton>
+        {isLoading ? (
+          <SpinnerMini />
+        ) : (
+          <StyledSendButton type="submit" disabled={isTransactionLoading}>
+            Send Money
+          </StyledSendButton>
+        )}
       </div>
     </StyledForm>
   );

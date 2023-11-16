@@ -10,9 +10,8 @@ function UsersTable() {
   
   if (isLoading) return <Spinner />;
   const usersInfos = data.data.users
-  console.log(usersInfos)
   
-  // if (!usersInfo.length) return <Empty resourceName='usersInfo' />;
+  if (!usersInfos.length) return <Empty resourceName='usersInfo' />;
   return (
     <Menus>
       <Table columns='1fr 1fr 1fr 1fr'>

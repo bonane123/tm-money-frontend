@@ -13,6 +13,7 @@ const StyledFrame = styled.iframe`
   margin-bottom: 2rem;
 
 `;
+const StyledP = styled.p``;
 
 const StyledImage = styled.img`
   width: 100%;
@@ -34,11 +35,11 @@ function OurStory() {
       <StyledFrame
         src='https://www.youtube.com/embed/1h_pNh3oil4'
         title='TM PROMO VIDEO'
-        frameborder='0'
+        frameBorder='0'
         allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-        allowfullscreen
+        allowFullScreen
       ></StyledFrame>
-      <p>
+      <StyledP>
         TM Money Transfer is a cutting-edge mobile payment service that enables
         individuals to transfer money in real-time to mobile money and other
         local financial institutions in Rwanda, Uganda, Kenya, Tanzania,
@@ -54,7 +55,7 @@ function OurStory() {
         offer incredibly low fees and a fair exchange rate, making our service
         the best option for people looking to send money to their loved ones in
         the countries we serve.
-      </p>
+      </StyledP>
       <StyledImage
         src='https://images.pexels.com/photos/50987/money-card-business-credit-card-50987.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
         alt='Credit card'

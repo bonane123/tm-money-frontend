@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import Button from '../../ui/Button';
 
-function CheckoutButton({ transactionId }) {
+function UpdateButton({ transactionId }) {
   return (
     <Button
           size="small"
@@ -14,4 +14,4 @@ function CheckoutButton({ transactionId }) {
   );
 }
 
-export default CheckoutButton;
+export default UpdateButton;
