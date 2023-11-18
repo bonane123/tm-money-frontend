@@ -11,3 +11,4 @@ The next thing we plan to do is integrate the payment gateway into the project
 # creating new media query
 we will be using styled component to create media query
 ne challenge
+creating google authorization
