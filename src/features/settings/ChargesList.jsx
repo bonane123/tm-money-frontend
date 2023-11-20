@@ -44,7 +44,6 @@ function ChargesList() {
   if (isLoading) {
     return <Spinner />;
   }
-  console.log(charges)
   return (
     <StyledToday>
       <Row type='horizontal'>

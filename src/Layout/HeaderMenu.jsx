@@ -47,8 +47,8 @@ function HeaderMenu({ isOpen }) {
           <StyledNavLink to="/send">Send Money</StyledNavLink>
         </li>
         <li>
-        <StyledNavLink to="/reviews">Reviews</StyledNavLink>
-      </li>
+          <StyledNavLink to="/reviews">Reviews</StyledNavLink>
+        </li>
         <li>
           <StyledNavLink to="/login">Login</StyledNavLink>
         </li>
@@ -67,15 +67,20 @@ function HeaderMenu({ isOpen }) {
       <li>
         <StyledNavLink to="/about">About Us</StyledNavLink>
       </li>
-      <li>
-        <StyledNavLink to="/send">Send Money</StyledNavLink>
-      </li>
+
+      {storedValue.data.user.role === "user" && (
+        <>
+          <li>
+            <StyledNavLink to="/transactions/users">History</StyledNavLink>
+          </li>
+          <li>
+            <StyledNavLink to="/send">Send Money</StyledNavLink>
+          </li>
+        </>
+      )}
 
       <li>
         <StyledNavLink to="/reviews">Reviews</StyledNavLink>
-      </li>
-      <li>
-        <StyledNavLink to="/transactions/users">History</StyledNavLink>
       </li>
 
       {storedValue.data.user.role === "admin" && (
