@@ -71,10 +71,10 @@ function HeaderMenu({ isOpen }) {
       {storedValue.data.user.role === "user" && (
         <>
           <li>
-            <StyledNavLink to="/transactions/users">History</StyledNavLink>
+            <StyledNavLink to="/send">Send Money</StyledNavLink>
           </li>
           <li>
-            <StyledNavLink to="/send">Send Money</StyledNavLink>
+            <StyledNavLink to="/transactions/users">History</StyledNavLink>
           </li>
         </>
       )}

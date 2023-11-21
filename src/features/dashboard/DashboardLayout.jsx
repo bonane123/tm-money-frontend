@@ -7,7 +7,7 @@ import Stats from "./Stats";
 import SalesChart from "./SalesChart";
 // import DurationChart from "./DurationChart";
 import TodayActivity from "../check-in-out/TodayActivity";
-import { useTransactions } from "../transactions/useTransactions";
+import { useStatTransactions } from "../transactions/useStatTransactions";
 
 const StyledDashboardLayout = styled.div`
   display: grid;
@@ -16,7 +16,7 @@ const StyledDashboardLayout = styled.div`
   gap: 2.4rem;
 `;
 function DashboardLayout() {
-  const { isLoading, data } = useTransactions();
+  const { isLoading, data } = useStatTransactions();
   if (isLoading) return <Spinner />;
 
   return (

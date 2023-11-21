@@ -9,8 +9,9 @@ import { formatCurrency } from "../../utils/helpers";
 
 function Stats({ transactions }) {
 
+
   // 1.
-  const numTransactions = transactions.results;
+  const numTransactions = transactions.data.results;
 
   // 2.
   const sales = transactions.data.transactions.reduce(

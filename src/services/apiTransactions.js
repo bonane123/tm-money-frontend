@@ -3,7 +3,27 @@ import { URL } from "./nodejsAPI";
 
 const storedValue = getAuthToken();
 
-export const getTransactions = async () => {
+export const getTransactions = async ({page}) => {
+  try {
+    const response = await fetch(`${URL}/transactions?page=${page}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedValue.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      console.log(`HTTP Error status: ${response.status}`);
+    }
+
+    const {data, results: count} = await response.json();
+    return {data, count};
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getStatTransactions = async () => {
   try {
     const response = await fetch(`${URL}/transactions`, {
       method: "GET",
@@ -23,6 +43,7 @@ export const getTransactions = async () => {
     console.log(error);
   }
 };
+
 export const getUsersTransactions = async (userId) => {
   try {
     const response = await fetch(
@@ -90,7 +111,6 @@ export const getTransaction = async (transactionId) => {
 };
 
 export const createTransaction = async ({ transaction }) => {
-  console.log(transaction);
   try {
     const response = await fetch(`${URL}/transactions`, {
       method: "POST",
@@ -113,7 +133,6 @@ export const createTransaction = async ({ transaction }) => {
   }
 };
 export const updateTransaction = async (transactionId, transaction) => {
-  console.log(transactionId);
   try {
     const response = await fetch(`${URL}/transactions/${transactionId}`, {
       method: "PATCH",

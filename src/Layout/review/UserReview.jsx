@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import PostedReview from './PostedReview';
 import { useReviews } from '../../features/reviews/useReviews';
 import Spinner from '../../ui/Spinner';
+import Pagination from '../../ui/Pagination';
 
 const ReviewContainer = styled.div`
   display: block;
@@ -19,6 +20,7 @@ function UserReview() {
       {data.data.reviews.map((review) =>( 
         <PostedReview key={review.id} feedback={review} />
       ))}
+      <Pagination/>
       
     </ReviewContainer>
   );

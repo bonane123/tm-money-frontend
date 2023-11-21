@@ -28,7 +28,7 @@ import UsersList from "./pages/UsersList";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import Cabins from "./pages/Reviews";
 import TransactionsHistory from "./pages/TransactionsHistory";
-// import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 // import ProtectedDashboard from './utils/ProtectedDashboard';
 
 const queryClient = new QueryClient({
@@ -46,7 +46,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <GlobalStyles />
-        {/* <GoogleOAuthProvider clientId="53789141681-1otmrguobqm7upt97kh8gceso0uq66rl.apps.googleusercontent.com"> */}
+        <GoogleOAuthProvider clientId="53789141681-1otmrguobqm7upt97kh8gceso0uq66rl.apps.googleusercontent.com">
         <BrowserRouter>
           <Routes>
             <Route element={<UserLayout />}>
@@ -85,7 +85,7 @@ function App() {
             />
           </Routes>
         </BrowserRouter>
-        {/* </GoogleOAuthProvider> */}
+        </GoogleOAuthProvider>
         <Toaster
           position="top-center"
           gutter={12}

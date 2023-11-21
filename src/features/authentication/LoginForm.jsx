@@ -10,6 +10,7 @@ import StyledFormFooter from "../../ui/StyledFormFooter";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 // import { useGoogleAuth } from "./useGoogleAuth";
+import { GoogleLogin } from "@react-oauth/google";
 
 const StyledSignupSpace = styled.div`
   display: flex;
@@ -66,14 +67,14 @@ function LoginForm() {
               {!isLoading ? "Sign in" : <SpinnerMini />}
             </Button>
           </StyledSignupSpace>
-          {/* <GoogleLogin
+          <GoogleLogin
           onSuccess={(credentialResponse) => {
             console.log(credentialResponse);
           }}
           onError={() => {
             console.log("Login Failed");
           }}
-        /> */}
+        />
         </FormRowVertical>
         <StyledFormFooter
           linkDesc="Sign up"

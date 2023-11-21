@@ -1,20 +1,20 @@
-import Empty from '../../ui/Empty';
-import Table from '../../ui/Table';
-import Menus from '../../ui/Menus';
-import Spinner from '../../ui/Spinner';
-import TransactionRow from './TransactionRow';
-import { useTransactions } from './useTransactions';
+import Empty from "../../ui/Empty";
+import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
+import Spinner from "../../ui/Spinner";
+import TransactionRow from "./TransactionRow";
+import { useTransactions } from "./useTransactions";
+import Pagination from "../../ui/Pagination";
 
 function TransactionTable() {
-  const { data, isLoading } = useTransactions();
-  
+  const { data, isLoading, count, page } = useTransactions();
+
   if (isLoading) return <Spinner />;
-  const transactions = data.data.transactions
-  
-  if (!transactions.length) return <Empty resourceName='transactions' />;
+
+  if (!data.transactions.length) return <Empty resourceName="transactions" />;
   return (
     <Menus>
-      <Table columns='0.3fr 1fr 1fr 0.5fr 0.8fr 0.5fr 0.5fr 0.9fr 0.5fr 1rem'>
+      <Table columns="0.3fr 1fr 1fr 0.5fr 0.8fr 0.5fr 0.5fr 0.9fr 0.5fr 1rem">
         <Table.Header>
           <div>Country</div>
           <div>Sender</div>
@@ -29,13 +29,13 @@ function TransactionTable() {
         </Table.Header>
 
         <Table.Body
-          data={transactions}
+          data={data.transactions}
           render={(transaction) => (
             <TransactionRow key={transaction.id} transaction={transaction} />
           )}
         />
         <Table.Footer>
-          {/* <Pagination count={count} page={page} /> */}
+          <Pagination count={count} page={page} />
         </Table.Footer>
       </Table>
     </Menus>
