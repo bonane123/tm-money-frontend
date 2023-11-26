@@ -1,7 +1,6 @@
 // import Row from '../../ui/Row';
 import ReviewsTable from '../features/reviews/ReviewsTable';
 // import Heading from '../../ui/Heading';
-import AddReview from '../features/reviews/AddReview';
 import ReviewTableOperations from '../features/reviews/ReviewTableOperations';
 
 import Heading from "../ui/Heading";
@@ -16,7 +15,6 @@ function Cabins() {
       </Row>
       <Row>
         <ReviewsTable />
-        <AddReview />
       </Row>
     </>
   );

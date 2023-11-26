@@ -1,51 +1,69 @@
 import styled from "styled-components";
-import Tag from "../../ui/Tag";
-import Button from "../../ui/Button";
-// import CheckoutButton from "./CheckoutButton";
-import { Link } from "react-router-dom";
+import Table from "../../ui/Table";
+import Modal from "../../ui/Modal";
+import Menus from "../../ui/Menus";
+import { HiPencil, HiTrash } from "react-icons/hi2";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import CreateChargeForm from "./CreateChargeForm";
+import { useDeleteCharge } from "./useDeleteCharge";
 
-const StyledTodayItem = styled.li`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 0.4fr;
-  gap: 1rem;
-  align-items: center;
-
-  font-size: 1.4rem;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid var(--color-grey-100);
-
-  &:first-child {
-    border-top: 1px solid var(--color-grey-100);
-  }
+const Review = styled.div`
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--color-grey-600);
+  font-family: "Sono";
 `;
 
-const Guest = styled.div`
+const Message = styled.div`
+  font-family: "Sono";
+  font-weight: 600;
+`;
+
+const Rating = styled.div`
+  font-family: "Sono";
   font-weight: 500;
+  color: var(--color-green-700);
 `;
 function ChargeItem({ activity }) {
-  const {
-    id,
-    maxAmount,
-    minAmount,
-    chargePercentage,
-  } = activity;
+  const { _id: chargeId, maxAmount, minAmount, chargePercentage } = activity;
+  const {deleteCharge, isDeletingCharge} = useDeleteCharge();
+
   return (
-    <StyledTodayItem>
-      <Guest>{minAmount}</Guest>
-      <Guest>{maxAmount}</Guest>
-      <Guest>{chargePercentage}%</Guest>
+    <>
+      <Table.Row>
+        <Review>{minAmount}</Review>
+        <Rating>{maxAmount}</Rating>
+        <Message>{chargePercentage}%</Message>
+        <div>
+          <Modal>
+            <Menus.Menu>
+              <Menus.Toggle id={chargeId} />
+              <Menus.List id={chargeId}>
+                <Modal.Open opens="edit">
+                  <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
+                </Modal.Open>
 
+                <Modal.Open opens="delete">
+                  <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+                </Modal.Open>
+              </Menus.List>
 
-        <Button
-          size="small"
-          variation="primary"
-          as={Link}
-          to={`/charges-update/${id}`}
-        >
-          Update
-        </Button>
+              <Modal.Window name="edit">
+                <CreateChargeForm chargeToEdit={activity} />
+              </Modal.Window>
 
-    </StyledTodayItem>
+              <Modal.Window name="delete">
+                <ConfirmDelete
+                  resourceName="charge"
+                  disabled={isDeletingCharge}
+                  onConfirm={() => deleteCharge(chargeId)}
+                />
+              </Modal.Window>
+            </Menus.Menu>
+          </Modal>
+        </div>
+      </Table.Row>
+    </>
   );
 }
 

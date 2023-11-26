@@ -65,29 +65,6 @@ function CheckinBooking() {
       </Row>
 
       <BookingDataBox transaction={singleTransaction} />
-      {/* 
-      {!hasBreakfast && (
-        <Box>
-          <Checkbox
-            checked={addBreakfast}
-            onChange={() => {
-              setAddBreakfast((add) => !add);
-              setConfirmPaid(false);
-            }}
-            id='breakfast'
-          >
-            Want to add breakfast for{' '}
-            {!addBreakfast
-              ? formatCurrency(optionalBreakfastPrice)
-              : `${formatCurrency(
-                  totalPrice + optionalBreakfastPrice
-                )} (${formatCurrency(totalPrice)} + ${formatCurrency(
-                  optionalBreakfastPrice
-                )})`}
-          </Checkbox>
-        </Box>
-      )} */}
-
       <Box>
         <Checkbox
           checked={confirmPaid}

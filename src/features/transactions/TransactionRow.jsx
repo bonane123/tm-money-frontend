@@ -49,7 +49,7 @@ function TransactionRow({
     destinationCurrency,
     destinationCountry,
     destinationAccountDetails,
-    destinationAccount,
+    account,
     amountToSend,
     transferFees,
     createdAt,
@@ -66,7 +66,7 @@ function TransactionRow({
 
   return (
     <Table.Row>
-      <Cabin>{destinationCountry}</Cabin>
+      <Cabin>{destinationCountry?.name}</Cabin>
 
       <Stacked>
         <span>
@@ -87,7 +87,7 @@ function TransactionRow({
         <span>{destinationAccountDetails}</span>
       </Stacked>
       <Stacked>
-        <span>{destinationAccount}</span>
+        <span>{account}</span>
       </Stacked>
 
       <Tag type={statusToTagName[status]}>{status}</Tag>
@@ -123,9 +123,9 @@ function TransactionRow({
               </Menus.Button>
             )}
 
-            <Modal.Open opens='delete'>
+            {/* <Modal.Open opens='delete'>
               <Menus.Button icon={<HiTrash />}>Delete transaction</Menus.Button>
-            </Modal.Open>
+            </Modal.Open> */}
           </Menus.List>
         </Menus.Menu>
 

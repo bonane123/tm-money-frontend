@@ -11,7 +11,7 @@ function Stats({ transactions }) {
 
 
   // 1.
-  const numTransactions = transactions.data.results;
+  const numTransactions = transactions.results;
 
   // 2.
   const sales = transactions.data.transactions.reduce(

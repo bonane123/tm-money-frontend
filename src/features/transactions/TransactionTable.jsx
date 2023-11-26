@@ -35,7 +35,7 @@ function TransactionTable() {
           )}
         />
         <Table.Footer>
-          <Pagination count={count} page={page} />
+          <Pagination count={count} page={page} page_size={10}/>
         </Table.Footer>
       </Table>
     </Menus>

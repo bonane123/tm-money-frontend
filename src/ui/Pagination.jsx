@@ -60,11 +60,12 @@ const PaginationButton = styled.button`
 `;
 
 
-function Pagination({ count, page }) {
+function Pagination({ count, page, page_size = 5 }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
 
-  const pageCount = Math.ceil(count / PAGE_SIZE);
+  const pageCount = Math.ceil(count / page_size);
+
 
   function nextPage() {
     const next = page === pageCount ? page : page + 1;
@@ -82,9 +83,9 @@ function Pagination({ count, page }) {
   return (
     <StyledPagination>
       <P>
-        showing <span>{(page - 1) * PAGE_SIZE + 1}</span> to{' '}
+        showing <span>{(page - 1) * page_size + 1}</span> to{' '}
         <span>
-          {page === pageCount ? count : page * PAGE_SIZE}
+          {page === pageCount ? count : page * page_size}
         </span>{' '}
         of <span>{count}</span> results
       </P>

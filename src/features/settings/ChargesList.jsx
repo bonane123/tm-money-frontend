@@ -1,68 +1,36 @@
-import styled from 'styled-components';
-
-import Heading from '../../ui/Heading';
-import Row from '../../ui/Row';
-import Spinner from '../../ui/Spinner';
-import TodayItem from './ChargeItem';
-import { useSettings } from './useSettings';
-
-const StyledToday = styled.div`
-  /* Box */
-  background-color: var(--color-grey-0);
-  border: 1px solid var(--color-grey-100);
-  border-radius: var(--border-radius-md);
-
-  padding: 3.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2.4rem;
-  grid-column: 1 / -1;
-  padding-top: 2.4rem;
-`;
-
-const TodayList = styled.ul`
-  overflow: scroll;
-  overflow-x: hidden;
-
-  /* Removing scrollbars for webkit, firefox, and ms, respectively */
-  &::-webkit-scrollbar {
-    width: 0 !important;
-  }
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-`;
-
-const NoActivity = styled.p`
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 500;
-  margin-top: 0.8rem;
-`;
+import Spinner from "../../ui/Spinner";
+import { useSettings } from "./useSettings";
+import Menus from "../../ui/Menus";
+import Table from "../../ui/Table";
+import ChargeItem from "./ChargeItem";
+import AddCharge from "./AddCharge";
 
 function ChargesList() {
-  const {charges, isLoading} = useSettings()
+  const { charges, isLoading } = useSettings();
   if (isLoading) {
     return <Spinner />;
   }
   return (
-    <StyledToday>
-      <Row type='horizontal'>
-        <Heading as='h2'>Update Charges</Heading>
-      </Row>
-      {!isLoading ? (
-        charges?.length > 0 ? (
-          <TodayList>
-            {charges.map((activity) => (
-              <TodayItem activity={activity} key={activity.id} />
-            ))}
-          </TodayList>
-        ) : (
-          <NoActivity>No charges...</NoActivity>
-        )
-      ) : (
-        <Spinner />
-      )}
-    </StyledToday>
+    <>
+      <Menus>
+        <Table columns="1fr 1fr 1fr 0.6fr">
+          <Table.Header>
+            <div>Min Amount</div>
+            <div>Max Amount</div>
+            <div>Charge Percentage</div>
+            <div></div>
+          </Table.Header>
+
+          <Table.Body
+            data={charges}
+            render={(activity) => (
+              <ChargeItem activity={activity} key={activity._id} />
+            )}
+          />
+        </Table>
+      </Menus>
+      <AddCharge />
+    </>
   );
 }
 

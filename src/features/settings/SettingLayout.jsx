@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 import ChargesList from "./ChargesList";
-import UpdateSettingsForm from "./UpdateSettingsForm";
 
 const StyledSettingLayout = styled.div`
   display: grid;
@@ -13,8 +12,6 @@ function SettingLayout() {
   return (
     <StyledSettingLayout>
       <ChargesList />
-
-      <UpdateSettingsForm />
     </StyledSettingLayout>
   );
 }

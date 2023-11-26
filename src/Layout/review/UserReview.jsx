@@ -1,8 +1,14 @@
-import { styled } from 'styled-components';
-import PostedReview from './PostedReview';
-import { useReviews } from '../../features/reviews/useReviews';
-import Spinner from '../../ui/Spinner';
-import Pagination from '../../ui/Pagination';
+import { styled } from "styled-components";
+import PostedReview from "./PostedReview";
+import { useReviews } from "../../features/reviews/useReviews";
+import Spinner from "../../ui/Spinner";
+import Pagination from "../../ui/Pagination";
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+`;
 
 const ReviewContainer = styled.div`
   display: block;
@@ -10,19 +16,20 @@ const ReviewContainer = styled.div`
 `;
 
 function UserReview() {
-  const {isLoading, data} = useReviews()
-  if (isLoading){
-    return <Spinner/>
+  const { isLoading, data, count, page } = useReviews();
+  if (isLoading) {
+    return <Spinner />;
   }
 
   return (
-    <ReviewContainer>
-      {data.data.reviews.map((review) =>( 
-        <PostedReview key={review.id} feedback={review} />
-      ))}
-      <Pagination/>
-      
-    </ReviewContainer>
+    <StyledContainer>
+      <ReviewContainer>
+        {data.reviews.map((review) => (
+          <PostedReview key={review.id} feedback={review} />
+        ))}
+      </ReviewContainer>
+      <Pagination count={count} page={page} />
+    </StyledContainer>
   );
 }
 

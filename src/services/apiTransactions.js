@@ -23,9 +23,31 @@ export const getTransactions = async ({page}) => {
     console.log(error);
   }
 };
-export const getStatTransactions = async () => {
+
+export const getAllTransactions = async () => {
   try {
     const response = await fetch(`${URL}/transactions`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedValue.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      console.log(`HTTP Error status: ${response.status}`);
+    }
+
+    const {data, results: count} = await response.json();
+    return {data, count};
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getStatTransactions = async () => {
+  try {
+    const response = await fetch(`${URL}/transactions/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -148,7 +170,6 @@ export const updateTransaction = async (transactionId, transaction) => {
     }
 
     const data = await response.json();
-    console.log(data);
 
     return data;
   } catch (error) {

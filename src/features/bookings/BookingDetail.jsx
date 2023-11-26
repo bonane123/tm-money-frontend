@@ -9,17 +9,17 @@ import Button from '../../ui/Button';
 import ButtonText from '../../ui/ButtonText';
 
 import { useMoveBack } from '../../hooks/useMoveBack';
-import { useBooking } from './useBooking';
+// import { useBooking } from './useBooking';
 import Spinner from '../../ui/Spinner';
 import { useNavigate } from 'react-router-dom';
-import { HiArrowUpOnSquare } from 'react-icons/hi2';
-import { useCheckout } from '../check-in-out/useCheckout';
+// import { HiArrowUpOnSquare } from 'react-icons/hi2';
+// import { useCheckout } from '../check-in-out/useCheckout';
 import Modal from '../../ui/Modal';
-import ConfirmDelete from '../../ui/ConfirmDelete';
-import { useDeleteBooking } from './useDeleteBooking';
+// import ConfirmDelete from '../../ui/ConfirmDelete';
+// import { useDeleteBooking } from './useDeleteBooking';
 import Empty from '../../ui/Empty';
 import { useTransaction } from '../transactions/useTransaction';
-
+ 
 const HeadingGroup = styled.div`
   display: flex;
   gap: 2.4rem;
@@ -39,7 +39,6 @@ function BookingDetail() {
 
   const { status, id: transactionId } = transaction.data.transaction;
   const singleTransaction = transaction.data.transaction
-  console.log(singleTransaction)
 
   const statusToTagName = {
     pending: 'blue',
@@ -66,9 +65,9 @@ function BookingDetail() {
         )}
 
         <Modal>
-          <Modal.Open opens='delete'>
+          {/* <Modal.Open opens='delete'>
             <Button variation='danger'>Delete Transaction</Button>
-          </Modal.Open>
+          </Modal.Open> */}
 
           {/* <Modal.Window name='delete'>
             <ConfirmDelete

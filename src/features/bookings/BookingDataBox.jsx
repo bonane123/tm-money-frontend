@@ -114,7 +114,7 @@ function BookingDataBox({ transaction }) {
   const {
     createdAt,
     amountToSend,
-    destinationAccount,
+    account,
     destinationAccountDetails,
     destinationCountry,
     destinationCurrency,
@@ -159,7 +159,7 @@ function BookingDataBox({ transaction }) {
             Destination Information
           </p>
           <span>&bull;</span>
-          <p>{destinationAccount}</p>
+          <p>{account}</p>
           <span>&bull;</span>
           <p>Account Details {destinationAccountDetails}</p>
         </Guest>
@@ -184,7 +184,7 @@ function BookingDataBox({ transaction }) {
             icon={<MdEmojiFlags />}
             label="Country"
           >
-           <p>&ndash;</p> {destinationCountry}
+           <p>&ndash;</p> {destinationCountry?.name}
           </DataItem>
 
 
@@ -193,14 +193,14 @@ function BookingDataBox({ transaction }) {
         </DataItem>
 
         <Price >
-          <DataItem icon={<HiOutlineCurrencyDollar />} label={`Total Send`}>
+          <DataItem icon={<HiOutlineCurrencyDollar />} label={`Amount Recieved`}>
             {formatCurrency(amountToSend)}
           </DataItem>
 
           <p>Deposited Amount</p>
         </Price>
         <Price isPaid={status}>
-          <DataItem icon={<HiOutlineCurrencyDollar />} label={`Total Received`}>
+          <DataItem icon={<HiOutlineCurrencyDollar />} label={`Amount To Send`}>
             {receiverGets.toLocaleString()} {destinationCurrency}
           </DataItem>
 

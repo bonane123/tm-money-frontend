@@ -1,32 +1,41 @@
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
-import Input from '../../ui/Input';
-import Form from '../../ui/Form';
-import Button from '../../ui/Button';
-import Textarea from '../../ui/Textarea';
-import FormRow from '../../ui/FormRow';
-import { useCreateReview } from './useCreateReview';
-// import { useUpdateReview } from './useUpdateReview';
+import Input from "../../ui/Input";
+import Form from "../../ui/Form";
+import Button from "../../ui/Button";
+import Textarea from "../../ui/Textarea";
+import FormRow from "../../ui/FormRow";
+// import { useCreateReview } from "./useCreateReview";
+import { useUpdateReview } from "./useUpdateReview";
 
 function CreateReviewForm({ reviewToEdit = {}, onCloseModal }) {
   const { id: editId, ...editValues } = reviewToEdit;
 
   const isEditSesson = Boolean(editId);
   const { register, handleSubmit, reset, formState } = useForm({
-    // defaultValues: isEditSesson ? editValues : {},
+    defaultValues: isEditSesson ? editValues : {},
   });
 
   const { errors } = formState;
 
-  const { isCreating, createReview } = useCreateReview();
-  // const { isEditing, editReview } = useUpdateReview();
+  // const { isCreating, createReview } = useCreateReview();
+  const { isUpdating, updateSingleReview } = useUpdateReview();
 
-  const isWorking = isCreating ;
+  const isWorking = isUpdating;
 
   function onSubmit(data) {
-    // if (isEditSesson)
-    //   editReview(
-    //     // { newReviewData: { ...data }, id: editId },
+    updateSingleReview(
+      { newReviewData: { ...data }, id: editId },
+      {
+        onSuccess: () => {
+          reset();
+          onCloseModal?.();
+        },
+      }
+    );
+    // else
+    //   createReview(
+    //     { ...data },
     //     {
     //       onSuccess: () => {
     //         reset();
@@ -34,70 +43,49 @@ function CreateReviewForm({ reviewToEdit = {}, onCloseModal }) {
     //       },
     //     }
     //   );
-    // else
-      createReview(
-        { ...data },
-        {
-          onSuccess: () => {
-            reset();
-            onCloseModal?.();
-          },
-        }
-      );
   }
 
   return (
     <Form
       onSubmit={handleSubmit(onSubmit)}
-      type={onCloseModal ? 'modal' : 'regular'}
+      type={onCloseModal ? "modal" : "regular"}
     >
-      <FormRow label='Names' error={errors?.fullName?.message}>
+      <FormRow label="Rating" error={errors?.rating?.message}>
         <Input
-          type='text'
-          id='fullName'
-          disabled={isWorking}
-          {...register('fullName', {
-            required: 'this field is required',
-          })}
-        />
-      </FormRow>
-
-      <FormRow label='Rating' error={errors?.rating?.message}>
-        <Input
-          type='number'
-          id='rating'
+          type="number"
+          id="rating"
           disabled={isWorking}
           defaultValue={0}
-          {...register('rating', {
-            required: 'this field is required',
+          {...register("rating", {
+            required: "this field is required",
             min: 0, // Minimum value
             max: 5, // Maximum value
           })}
         />
       </FormRow>
 
-      <FormRow label='Message' error={errors?.message?.message}>
+      <FormRow label="Message" error={errors?.review?.message}>
         <Textarea
-          type='number'
-          id='message'
+          type="number"
+          id="message"
           disabled={isWorking}
-          defaultValue=''
-          {...register('message', {
-            required: 'this field is required',
+          defaultValue=""
+          {...register("review", {
+            required: "this field is required",
           })}
         />
       </FormRow>
       <FormRow>
         {/* type is an HTML attribute! */}
         <Button
-          variation='secondary'
-          type='reset'
+          variation="secondary"
+          type="reset"
           onClick={() => onCloseModal?.()}
         >
           Cancel
         </Button>
         <Button disabled={isWorking}>
-          {isEditSesson ? 'Edit Review' : 'Add Review'}
+          {isEditSesson ? "Edit Review" : "Add Review"}
         </Button>
       </FormRow>
     </Form>

@@ -42,7 +42,7 @@ function TodayItem({ activity }) {
       <div>
         {receiverGets.toLocaleString()} {destinationCurrency}
       </div>
-      <div>{destinationCountry}</div>
+      <div>{destinationCountry?.name}</div>
       <div>{destinationAccountDetails}</div>
 
       {status === "pending" && (

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { styled } from "styled-components";
-import { countries } from "../../data/countries";
+// import { countries } from "../../data/countries";
 import { useCharges } from "../../features/charges/useCharges";
 import Spinner from "../../ui/Spinner";
 import { useUser } from "../../features/authentication/useUser";
 import { useCreateTransaction } from "../../features/transactions/useCreateTransaction";
 import { useNavigate } from "react-router-dom";
 import SpinnerMini from "../../ui/SpinnerMini";
+import { useCountries } from "../../features/countries/useCountries";
 
 const StyledForm = styled.form`
   /* background-color: #152238; */
@@ -82,12 +83,13 @@ const StyledSendButton = styled.button`
 `;
 
 function BigForm({ updateFormData, updateAnswer, answer }) {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, control, watch } = useForm();
   const [selectedCountry, setSelectedCountry] = useState("");
   const [loading, setLoading] = useState(false);
   const { user, isLoading } = useUser();
 
   const { data, isChargesLoading } = useCharges();
+  const { countriesList, isCountriesLoading } = useCountries();
   const { createNewTransaction, isTransactionLoading } = useCreateTransaction();
   const navigate = useNavigate();
 
@@ -122,7 +124,14 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     // Call the fetchData function inside useEffect
   }, [selectedCountry]);
 
-  if (isChargesLoading) {
+  const handleCountryChange = (selectedCountryId) => {
+    const country = countriesList.find((c) => c._id === selectedCountryId);
+    setSelectedCountry(country);
+    setValue("currency", country.currency);
+    setValue("account", country.account[0]); // Select the first account by default
+  };
+
+  if (isChargesLoading || isCountriesLoading) {
     return <Spinner />;
   }
   if (isLoading) {
@@ -149,7 +158,6 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   const handleAmountChange = (e) => {
     const amount = parseFloat(e.target.value);
     const { transferFees, chargePercentage } = calculateTransferFees(amount);
-    console.log(transferFees, chargePercentage);
 
     const updatedReceiverGets = (amount - transferFees) * answer;
     setValue("transferFees", transferFees);
@@ -165,6 +173,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   };
 
   const onSubmit = (data) => {
+    console.log(data);
     const userId = user.data.user._id;
     const formDataWithUser = {
       ...data,
@@ -213,28 +222,48 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       <StyledNames>
         <StyledName>
           <StyledLabel htmlFor="destination-country">Country</StyledLabel>
-          <StyledSelect
-            id="destination-country"
-            {...register("destinationCountry", { required: true })}
-            disabled={isTransactionLoading}
-            required
-            onChange={(e) =>
-              setSelectedCountry(
-                countries.find((c) => c.name === e.target.value)
-              )
-            }
-          >
-            {countries.map((c) => (
-              <option value={c.name} key={c.name}>
-                {c.name}
-              </option>
-            ))}
-          </StyledSelect>
+          <Controller
+            name="destinationCountry"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <StyledSelect
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                  handleCountryChange(e.target.value);
+                }}
+              >
+                <option value="" disabled>
+                  Select a country
+                </option>
+                {countriesList.map((country) => (
+                  <option key={country._id} value={country._id}>
+                    {country.name}
+                  </option>
+                ))}
+              </StyledSelect>
+            )}
+          />
         </StyledName>
         <StyledName>
           <StyledLabel htmlFor="destination-account">Account</StyledLabel>
-
-          <StyledSelect
+          <Controller
+            name="account"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <StyledSelect {...field}>
+                {selectedCountry &&
+                  selectedCountry.account.map((account, index) => (
+                    <option key={index} value={account}>
+                      {account}
+                    </option>
+                  ))}
+              </StyledSelect>
+            )}
+          />
+          {/* <StyledSelect
             id="destination-account"
             {...register("destinationAccount", { required: true })}
             disabled={isTransactionLoading}
@@ -244,7 +273,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
             <option value="Checking">Checking</option>
             <option value="Savings">Savings</option>
             <option value="Investment">Investment</option>
-          </StyledSelect>
+          </StyledSelect> */}
         </StyledName>
         <StyledName>
           <StyledLabel htmlFor="destination-account">
@@ -252,7 +281,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
           </StyledLabel>
           <StyledInput
             type="text"
-            id="destination-account-details"
+            id="destination-account"
             {...register("destinationAccountDetails", { required: true })}
             placeholder="Ex: 500-400-222"
             disabled={isTransactionLoading}
@@ -269,8 +298,8 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
           required
         >
           <option value={selectedCountry ? selectedCountry.currency : ""}>
-            {selectedCountry && <p> {selectedCountry.currency}</p>}
-            {!selectedCountry && <p>Select country first</p>}
+            {selectedCountry && <>{selectedCountry.currency}</>}
+            {!selectedCountry && "Select country first"}
           </option>
         </StyledSelect>
       </StyledName>
