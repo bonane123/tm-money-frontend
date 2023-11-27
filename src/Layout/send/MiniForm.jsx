@@ -60,7 +60,7 @@ font-size: 1.5rem;
 
 function MiniForm({formData, answer}) {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const { destinationCurrency } = formData;
+  const { destinationCurrency, transferCurrency } = formData;
 
   useEffect(() => {
     // Update the current time every second
@@ -81,7 +81,7 @@ function MiniForm({formData, answer}) {
 
   let newCharge = '';
   if (percentageCharges === 5000){
-    newCharge = `KRW ${percentageCharges}`
+    newCharge = `${transferCurrency} ${percentageCharges}`
   }
   else newCharge = `${percentageCharges * 100}%`;
   
@@ -103,7 +103,7 @@ function MiniForm({formData, answer}) {
             <p>Transfer Amount:</p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>KRW {parseFloat(senderAmount).toFixed(2)}</p>
+            <p>{transferCurrency} {parseFloat(senderAmount).toFixed(2)}</p>
           </StyledLeftDiv>
         </StyledDateTime>
         <StyledDateTime>
@@ -111,7 +111,7 @@ function MiniForm({formData, answer}) {
             <p>Received Amount:</p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>KRW {parseFloat(receiverAmount).toFixed(2)}</p>
+            <p>{transferCurrency} {parseFloat(receiverAmount).toFixed(2)}</p>
           </StyledLeftDiv>
         </StyledDateTime>
         <StyledDateTime>
@@ -119,7 +119,7 @@ function MiniForm({formData, answer}) {
             <p>Transfer Fees: </p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>Flat fee: KRW {transferFees.toFixed(2)}</p>
+            <p>Flat fee: {transferCurrency} {transferFees.toFixed(2)}</p>
             <p>Percentage fee: {newCharge}</p>
           </StyledLeftDiv>
         </StyledDateTime>
@@ -130,7 +130,7 @@ function MiniForm({formData, answer}) {
           <p>Exchange Rate:</p>
         </StyledRightDiv>
         <StyledLeftDiv>
-          <p>KRW 1 = {destinationCurrency} {answer}</p>
+          <p>{transferCurrency} 1 = {destinationCurrency} {answer}</p>
         </StyledLeftDiv>
       </StyledDateTime>
       <StyledDateTime>

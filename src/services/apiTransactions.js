@@ -134,22 +134,22 @@ export const getTransaction = async (transactionId) => {
 
 export const createTransaction = async ({ transaction }) => {
   try {
-    const response = await fetch(`${URL}/transactions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${storedValue.token}`,
-      },
-      body: JSON.stringify({ ...transaction }),
-    });
+    // const response = await fetch(`${URL}/transactions`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${storedValue.token}`,
+    //   },
+    //   body: JSON.stringify({ ...transaction }),
+    // });
 
-    if (!response.ok) {
-      console.log(`HTTP Error status: ${response.status}`);
-    }
+    // if (!response.ok) {
+    //   console.log(`HTTP Error status: ${response.status}`);
+    // }
 
-    const data = await response.json();
+    // const data = await response.json();
 
-    return data;
+    // return data;
   } catch (error) {
     console.log(error);
   }

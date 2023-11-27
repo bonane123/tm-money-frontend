@@ -14,22 +14,23 @@ const StyledForm = styled.form`
   /* background-color: #152238; */
   border: 1px solid var(--color-grey-200);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1rem;
+  margin-bottom: 3rem;
 `;
 
 const StyledP = styled.p`
-  margin: 2rem 0;
+  margin: 0;
 `;
 const StyledPElement = styled.p`
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 `;
 
 const StyledNames = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 1.2rem 0;
-  gap: 4rem;
+  margin: 0.5rem 0;
+  gap: 1rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -41,7 +42,7 @@ const StyledName = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 
   @media (max-width: 768px) {
     margin: 0rem;
@@ -83,8 +84,9 @@ const StyledSendButton = styled.button`
 `;
 
 function BigForm({ updateFormData, updateAnswer, answer }) {
-  const { register, handleSubmit, setValue, control, watch } = useForm();
+  const { register, handleSubmit, setValue, control } = useForm();
   const [selectedCountry, setSelectedCountry] = useState("");
+  const [transferCurrency, setTransferCurrency] = useState("");
   const [loading, setLoading] = useState(false);
   const { user, isLoading } = useUser();
 
@@ -93,10 +95,10 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   const { createNewTransaction, isTransactionLoading } = useCreateTransaction();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    var myHeaders = new Headers();
-    myHeaders.append("apikey", "Z3j2e55HJl4Y9IT767CZ2HulW3Y7rGQK ");
+  var myHeaders = new Headers();
+  myHeaders.append("apikey", "Z3j2e55HJl4Y9IT767CZ2HulW3Y7rGQK");
 
+  useEffect(() => {
     var requestOptions = {
       method: "GET",
       redirect: "follow",
@@ -107,27 +109,29 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       try {
         const response = await fetch(
           `https://api.apilayer.com/exchangerates_data/convert?to=${
-            selectedCountry.currency ? selectedCountry.currency : "KRW"
-          }&from=${"KRW"}&amount=${1}`,
+            selectedCountry.currency
+          }&from=${transferCurrency}&amount=${1}`,
           requestOptions
         );
         const data = await response.json();
 
         updateAnswer(data.result);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
       setLoading(false);
     };
-
     fetchData();
-    // Call the fetchData function inside useEffect
-  }, [selectedCountry]);
+  }, [selectedCountry, transferCurrency]);
+
+  // Call the fetchData function inside useEffect
 
   const handleCountryChange = (selectedCountryId) => {
     const country = countriesList.find((c) => c._id === selectedCountryId);
     setSelectedCountry(country);
-    setValue("currency", country.currency);
+    setValue("currencyToSend", transferCurrency);
+    // setValue("currency", country.currency);
     setValue("account", country.account[0]); // Select the first account by default
   };
 
@@ -140,11 +144,15 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
   const calculateTransferFees = (amount) => {
     let transferFees = 0;
-    let chargePercentage = 5000;
-    if (amount <= 50000) {
+    let chargePercentage = 0;
+
+    if (transferCurrency === "KRW" && amount <= 50000) {
+      chargePercentage = 5000;
       transferFees = 5000;
-      return { transferFees, chargePercentage };
-    } else
+    } else if (transferCurrency === "USD" && amount <= 5) {
+      chargePercentage = 5;
+      transferFees = 5;
+    } else {
       for (const charge of data) {
         if (amount >= charge.minAmount && amount <= charge.maxAmount) {
           transferFees = amount * charge.chargePercentage;
@@ -152,6 +160,8 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
           break;
         }
       }
+    }
+
     return { transferFees, chargePercentage };
   };
 
@@ -168,6 +178,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       transferFees: transferFees,
       receiverGets: updatedReceiverGets,
       percentageCharges: chargePercentage,
+      transferCurrency: transferCurrency,
       destinationCurrency: selectedCountry ? selectedCountry.currency : "KRW",
     });
   };
@@ -185,7 +196,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
         transaction: formDataWithUser,
       });
 
-      navigate("/"); // Move navigation inside the try block to ensure successful completion of transaction creation
+      navigate("/transactions/users"); // Move navigation inside the try block to ensure successful completion of transaction creation
     } catch (error) {
       console.error("Transaction creation failed:", error);
     }
@@ -218,6 +229,26 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
           />
         </StyledName>
       </StyledNames>
+      <StyledNames>
+        <StyledName>
+          <StyledLabel htmlFor="currency-to-send">Currency To Send</StyledLabel>
+          <StyledSelect
+            id="currency-to-send"
+            disabled={isTransactionLoading}
+            type="text"
+            required
+            {...register("currencyToSend")}
+            value={transferCurrency}
+            onChange={(e) => setTransferCurrency(e.target.value)}
+          >
+            <option value="">
+              Select a currency
+            </option>
+            <option value="KRW">KRW</option>
+            <option value="USD">USD</option>
+          </StyledSelect>
+        </StyledName>
+      </StyledNames>
       <StyledPElement>Destination Information</StyledPElement>
       <StyledNames>
         <StyledName>
@@ -225,7 +256,6 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
           <Controller
             name="destinationCountry"
             control={control}
-            defaultValue=""
             render={({ field }) => (
               <StyledSelect
                 {...field}
@@ -263,17 +293,6 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
               </StyledSelect>
             )}
           />
-          {/* <StyledSelect
-            id="destination-account"
-            {...register("destinationAccount", { required: true })}
-            disabled={isTransactionLoading}
-            required
-          >
-            <option value="">Select an account</option>
-            <option value="Checking">Checking</option>
-            <option value="Savings">Savings</option>
-            <option value="Investment">Investment</option>
-          </StyledSelect> */}
         </StyledName>
         <StyledName>
           <StyledLabel htmlFor="destination-account">
@@ -306,33 +325,30 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       <StyledNames>
         <StyledName>
           <StyledLabel htmlFor="amount-to-send">
-            Amount To Send in KRW (minimum is 5000 krw)
+            Amount To Send (minimum is 5000 krw Or $5)
           </StyledLabel>
           <StyledInput
             type="number"
             id="amount-to-send"
             name="amount-to-send"
-            min="5000"
+            min={transferCurrency === "USD" ? 5 : 5000}
             step="1"
             disabled={isTransactionLoading}
             required
-            {...register("amountToSend", {
-              min: 5000,
-              valueAsNumber: true,
-            })}
+            {...register("amountToSend")}
             onChange={handleAmountChange}
           />
         </StyledName>
       </StyledNames>
-      <div>
-        {isLoading ? (
+      <>
+        {loading ? (
           <SpinnerMini />
         ) : (
-          <StyledSendButton type="submit" disabled={isTransactionLoading}>
+          <StyledSendButton disabled={isTransactionLoading || loading}>
             Send Money
           </StyledSendButton>
         )}
-      </div>
+      </>
     </StyledForm>
   );
 }

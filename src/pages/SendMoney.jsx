@@ -43,6 +43,7 @@ const SendMoney = () => {
     'amount-to-send': 0,
     'transfer-fees': 0,
     'receiver-gets': 0,
+    'transferCurrency': '',
     'answer': 0
   });
   const [answer, setAnswer] = useState(""); 
