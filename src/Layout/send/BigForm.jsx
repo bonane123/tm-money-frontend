@@ -88,6 +88,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [transferCurrency, setTransferCurrency] = useState("");
   const [loading, setLoading] = useState(false);
+  const [newCharges, setNewCharges] = useState(null);
   const { user, isLoading } = useUser();
 
   const { data, isChargesLoading } = useCharges();
@@ -97,14 +98,15 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
   var myHeaders = new Headers();
   myHeaders.append("apikey", "Z3j2e55HJl4Y9IT767CZ2HulW3Y7rGQK");
+  var requestOptions = {
+    method: "GET",
+    redirect: "follow",
+    headers: myHeaders,
+  };
 
   useEffect(() => {
-    var requestOptions = {
-      method: "GET",
-      redirect: "follow",
-      headers: myHeaders,
-    };
-    const fetchData = async () => {
+    // Move fetchData out of useEffect to reduce request that users sends to the server
+    const fetchData = async (transferCurrency) => {
       setLoading(true);
       try {
         const response = await fetch(
@@ -146,12 +148,12 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     let transferFees = 0;
     let chargePercentage = 0;
 
-    if (transferCurrency === "KRW" && amount <= 50000) {
+    if (amount <= 50000) {
       chargePercentage = 5000;
       transferFees = 5000;
-    } else if (transferCurrency === "USD" && amount <= 5) {
-      chargePercentage = 5;
-      transferFees = 5;
+      // } else if (transferCurrency === "USD" && amount <= 5) {
+      //   chargePercentage = 5;
+      //   transferFees = 5;
     } else {
       for (const charge of data) {
         if (amount >= charge.minAmount && amount <= charge.maxAmount) {
@@ -164,6 +166,29 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
     return { transferFees, chargePercentage };
   };
+
+  const handleCurrencyChange = async (e) => {
+    // console.log(e.target.value);
+    if (e.target.value === 'USD') {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=${1}`,
+          requestOptions
+        );
+        const data = await response.json();
+
+        setNewCharges(data.result);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false);
+    }else {
+      setNewCharges(1)
+    }
+    console.log(newCharges)
+  }
 
   const handleAmountChange = (e) => {
     const amount = parseFloat(e.target.value);
@@ -238,12 +263,9 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
             type="text"
             required
             {...register("currencyToSend")}
-            value={transferCurrency}
-            onChange={(e) => setTransferCurrency(e.target.value)}
+            onChange={handleCurrencyChange}
           >
-            <option value="">
-              Select a currency
-            </option>
+            <option value="">Select a currency</option>
             <option value="KRW">KRW</option>
             <option value="USD">USD</option>
           </StyledSelect>

@@ -87,7 +87,7 @@ function MainNav() {
         <li>
           <StyledNavLink to='/users'>
             <HiOutlineUser />
-            User
+            Create User
           </StyledNavLink>
         </li>
         <li>
