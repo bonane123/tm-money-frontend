@@ -21,3 +21,4 @@ create a page that users can use to see the transaction they have made.
 
 I have to convert USD to KRW in case users chooses USD
 We have decided to use flutterwave for transfer money
+Creation of google auth
