@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {jwtDecode} from 'jwt-decode'
 import GlobalStyles from "./styles/GlobalStyles";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
@@ -14,6 +15,7 @@ import Booking from "./pages/Booking";
 import Checkin from "./pages/Checkin";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import { DarkModeProvider } from "./context/DarkModeContext";
+import { useEffect } from "react";
 import UserLayout from "./Layout/UserLayout";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -28,7 +30,6 @@ import UsersList from "./pages/UsersList";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import Cabins from "./pages/Reviews";
 import TransactionsHistory from "./pages/TransactionsHistory";
-import { GoogleOAuthProvider } from '@react-oauth/google';
 // import ProtectedDashboard from './utils/ProtectedDashboard';
 
 const queryClient = new QueryClient({
@@ -41,12 +42,47 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+
+  function handleCallbackResponse(response) {
+    var userData = jwtDecode(response.credential);
+    console.log(userData)
+
+  }
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+
+  script.onload = () => {
+    // Initialize Google Sign-In here
+    window.google.accounts.id.initialize({
+      client_id:
+        "82341067486-2ale8f152hg3as25d8kutml661nm4kcb.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
+
+    // Corrected renderButton line
+    window.google.accounts.id.renderButton(
+      document.getElementById("signInDiv"),
+      { theme: "outline", size: "large" }
+    );
+  };
+
+  // Clean up the script tag on component unmount
+  return () => {
+    document.head.removeChild(script);
+  };
+}, []);
+
   return (
     <DarkModeProvider>
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <GlobalStyles />
-        <GoogleOAuthProvider clientId="53789141681-1otmrguobqm7upt97kh8gceso0uq66rl.apps.googleusercontent.com">
+        
         <BrowserRouter>
           <Routes>
             <Route element={<UserLayout />}>
@@ -55,7 +91,10 @@ function App() {
               <Route path="reviews" element={<HelpPage />} />
               <Route element={<ProtectedRoute role="user" />}>
                 <Route path="send" element={<SendMoney />} />
-                <Route path="transactions/users" element={<TransactionsHistory />} />
+                <Route
+                  path="transactions/users"
+                  element={<TransactionsHistory />}
+                />
               </Route>
               <Route path="fqas" element={<FqasPage />} />
               <Route path="*" element={<PageNotFound />} />
@@ -85,7 +124,6 @@ function App() {
             />
           </Routes>
         </BrowserRouter>
-        </GoogleOAuthProvider>
         <Toaster
           position="top-center"
           gutter={12}

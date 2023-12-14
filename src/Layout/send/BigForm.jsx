@@ -265,7 +265,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
             {...register("currencyToSend")}
             onChange={handleCurrencyChange}
           >
-            <option value="">Select a currency</option>
+            {/* <option value="">Select a currency</option> */}
             <option value="KRW">KRW</option>
             <option value="USD">USD</option>
           </StyledSelect>
