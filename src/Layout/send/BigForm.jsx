@@ -104,35 +104,35 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     headers: myHeaders,
   };
 
-  useEffect(() => {
-    // Move fetchData out of useEffect to reduce request that users sends to the server
-    const fetchData = async (transferCurrency) => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `https://api.apilayer.com/exchangerates_data/convert?to=${
-            selectedCountry.currency
-          }&from=${transferCurrency}&amount=${1}`,
-          requestOptions
-        );
-        const data = await response.json();
+  // useEffect(() => {
+  //   // Move fetchData out of useEffect to reduce request that users sends to the server
+  //   const fetchData = async (transferCurrency) => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await fetch(
+  //         `https://api.apilayer.com/exchangerates_data/convert?to=${
+  //           selectedCountry.currency
+  //         }&from=${transferCurrency}&amount=${1}`,
+  //         requestOptions
+  //       );
+  //       const data = await response.json();
 
-        updateAnswer(data.result);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-      setLoading(false);
-    };
-    fetchData();
-  }, [selectedCountry, transferCurrency]);
+  //       updateAnswer(data.result);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //     setLoading(false);
+  //   };
+  //   fetchData();
+  // }, [selectedCountry, transferCurrency]);
 
   // Call the fetchData function inside useEffect
 
   const handleCountryChange = (selectedCountryId) => {
     const country = countriesList.find((c) => c._id === selectedCountryId);
     setSelectedCountry(country);
-    setValue("currencyToSend", transferCurrency);
+    // setValue("currencyToSend", transferCurrency);
     // setValue("currency", country.currency);
     setValue("account", country.account[0]); // Select the first account by default
   };
@@ -167,28 +167,28 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     return { transferFees, chargePercentage };
   };
 
-  const handleCurrencyChange = async (e) => {
-    // console.log(e.target.value);
-    if (e.target.value === 'USD') {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=${1}`,
-          requestOptions
-        );
-        const data = await response.json();
+  // const handleCurrencyChange = async (e) => {
+  //   // console.log(e.target.value);
+  //   if (e.target.value === 'USD') {
+  //     setLoading(true);
+  //     try {
+  //       const response = await fetch(
+  //         `https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=${1}`,
+  //         requestOptions
+  //       );
+  //       const data = await response.json();
 
-        setNewCharges(data.result);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-      setLoading(false);
-    }else {
-      setNewCharges(1)
-    }
-    console.log(newCharges)
-  }
+  //       setNewCharges(data.result);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //     setLoading(false);
+  //   }else {
+  //     setNewCharges(1)
+  //   }
+  //   console.log(newCharges)
+  // }
 
   const handleAmountChange = (e) => {
     const amount = parseFloat(e.target.value);
@@ -210,21 +210,21 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
   const onSubmit = (data) => {
     console.log(data);
-    const userId = user.data.user._id;
-    const formDataWithUser = {
-      ...data,
-      user: userId,
-    };
+  //   const userId = user.data.user._id;
+  //   const formDataWithUser = {
+  //     ...data,
+  //     user: userId,
+  //   };
 
-    try {
-      createNewTransaction({
-        transaction: formDataWithUser,
-      });
+  //   try {
+  //     createNewTransaction({
+  //       transaction: formDataWithUser,
+  //     });
 
-      navigate("/transactions/users"); // Move navigation inside the try block to ensure successful completion of transaction creation
-    } catch (error) {
-      console.error("Transaction creation failed:", error);
-    }
+  //     navigate("/transactions/users"); 
+  //   } catch (error) {
+  //     console.error("Transaction creation failed:", error);
+  //   }
   };
 
   return (
@@ -263,7 +263,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
             type="text"
             required
             {...register("currencyToSend")}
-            onChange={handleCurrencyChange}
+            // onChange={handleCurrencyChange}
           >
             {/* <option value="">Select a currency</option> */}
             <option value="KRW">KRW</option>
