@@ -104,28 +104,28 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     headers: myHeaders,
   };
 
-  // useEffect(() => {
-  //   // Move fetchData out of useEffect to reduce request that users sends to the server
-  //   const fetchData = async (transferCurrency) => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await fetch(
-  //         `https://api.apilayer.com/exchangerates_data/convert?to=${
-  //           selectedCountry.currency
-  //         }&from=${transferCurrency}&amount=${1}`,
-  //         requestOptions
-  //       );
-  //       const data = await response.json();
+  useEffect(() => {
+    // Move fetchData out of useEffect to reduce request that users sends to the server
+    const fetchData = async (transferCurrency) => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `https://api.apilayer.com/exchangerates_data/convert?to=${
+            selectedCountry.currency
+          }&from=${transferCurrency}&amount=${1}`,
+          requestOptions
+        );
+        const data = await response.json();
 
-  //       updateAnswer(data.result);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //     setLoading(false);
-  //   };
-  //   fetchData();
-  // }, [selectedCountry, transferCurrency]);
+        updateAnswer(data.result);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, [selectedCountry, transferCurrency]);
 
   // Call the fetchData function inside useEffect
 
@@ -210,21 +210,21 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
   const onSubmit = (data) => {
     console.log(data);
-  //   const userId = user.data.user._id;
-  //   const formDataWithUser = {
-  //     ...data,
-  //     user: userId,
-  //   };
+    const userId = user.data.user._id;
+    const formDataWithUser = {
+      ...data,
+      user: userId,
+    };
 
-  //   try {
-  //     createNewTransaction({
-  //       transaction: formDataWithUser,
-  //     });
+    try {
+      createNewTransaction({
+        transaction: formDataWithUser,
+      });
 
-  //     navigate("/transactions/users"); 
-  //   } catch (error) {
-  //     console.error("Transaction creation failed:", error);
-  //   }
+      navigate("/transactions/users"); 
+    } catch (error) {
+      console.error("Transaction creation failed:", error);
+    }
   };
 
   return (
