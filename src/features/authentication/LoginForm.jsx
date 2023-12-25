@@ -65,6 +65,9 @@ function LoginForm() {
             </Button>
           </StyledSignupSpace>
         </FormRowVertical>
+        <FormRowVertical>
+        </FormRowVertical>
+          <div id="signInDiv" ></div>
         <StyledFormFooter
           linkDesc="Sign up"
           question="Don't have an account?"
