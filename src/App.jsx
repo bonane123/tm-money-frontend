@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import {jwtDecode} from 'jwt-decode'
+// import {jwtDecode} from 'jwt-decode'
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import GlobalStyles from "./styles/GlobalStyles";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
@@ -15,7 +16,6 @@ import Booking from "./pages/Booking";
 import Checkin from "./pages/Checkin";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import { DarkModeProvider } from "./context/DarkModeContext";
-import { useEffect } from "react";
 import UserLayout from "./Layout/UserLayout";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -42,88 +42,91 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  //   function handleCallbackResponse(response) {
+  //     var userData = jwtDecode(response.credential);
+  //     console.log(userData)
 
-  function handleCallbackResponse(response) {
-    var userData = jwtDecode(response.credential);
-    console.log(userData)
+  //   }
 
-  }
+  //   useEffect(() => {
+  //     const script = document.createElement("script");
+  //     script.src = "https://accounts.google.com/gsi/client";
+  //   script.async = true;
+  //   script.defer = true;
+  //   document.head.appendChild(script);
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-  script.async = true;
-  script.defer = true;
-  document.head.appendChild(script);
+  //   script.onload = () => {
+  //     // Initialize Google Sign-In here
+  //     window.google.accounts.id.initialize({
+  //       client_id:
+  //         "82341067486-2ale8f152hg3as25d8kutml661nm4kcb.apps.googleusercontent.com",
+  //       callback: handleCallbackResponse,
+  //     });
 
-  script.onload = () => {
-    // Initialize Google Sign-In here
-    window.google.accounts.id.initialize({
-      client_id:
-        "82341067486-2ale8f152hg3as25d8kutml661nm4kcb.apps.googleusercontent.com",
-      callback: handleCallbackResponse,
-    });
+  //     // Corrected renderButton line
+  //     window.google.accounts.id.renderButton(
+  //       document.getElementById("signInDiv"),
+  //       { theme: "outline", size: "large" }
+  //     );
+  //   };
 
-    // Corrected renderButton line
-    window.google.accounts.id.renderButton(
-      document.getElementById("signInDiv"),
-      { theme: "outline", size: "large" }
-    );
-  };
-
-  // Clean up the script tag on component unmount
-  return () => {
-    document.head.removeChild(script);
-  };
-}, []);
+  //   // Clean up the script tag on component unmount
+  //   return () => {
+  //     document.head.removeChild(script);
+  //   };
+  // }, []);
 
   return (
     <DarkModeProvider>
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <GlobalStyles />
-        
-        <BrowserRouter>
-          <Routes>
-            <Route element={<UserLayout />}>
-              <Route index element={<HomePage />} />
-              <Route path="about" element={<AboutPage />} />
-              <Route path="reviews" element={<HelpPage />} />
-              <Route element={<ProtectedRoute role="user" />}>
-                <Route path="send" element={<SendMoney />} />
-                <Route
-                  path="transactions/users"
-                  element={<TransactionsHistory />}
-                />
-              </Route>
-              <Route path="fqas" element={<FqasPage />} />
-              <Route path="*" element={<PageNotFound />} />
-
-              <Route element={<AppLayout />}>
-                <Route element={<ProtectedRoute role="admin" />}>
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="transactions" element={<Transactions />} />
+        <GoogleOAuthProvider clientId="82341067486-2ale8f152hg3as25d8kutml661nm4kcb.apps.googleusercontent.com">
+          <BrowserRouter>
+            <Routes>
+              <Route element={<UserLayout />}>
+                <Route index element={<HomePage />} />
+                <Route path="about" element={<AboutPage />} />
+                <Route path="reviews" element={<HelpPage />} />
+                <Route element={<ProtectedRoute role="user" />}>
+                  <Route path="send" element={<SendMoney />} />
                   <Route
-                    path="transactions/:TransactionId"
-                    element={<Booking />}
+                    path="transactions/users"
+                    element={<TransactionsHistory />}
                   />
-                  <Route path="confirm/:TransactionId" element={<Checkin />} />
-                  <Route path="all-users" element={<UsersList />} />
-                  <Route path="all-reviews" element={<Cabins />} />
-                  <Route path="users" element={<Users />} />
-                  <Route path="charges" element={<Settings />} />
-                  <Route path="account" element={<Account />} />
+                </Route>
+                <Route path="fqas" element={<FqasPage />} />
+                <Route path="*" element={<PageNotFound />} />
+
+                <Route element={<AppLayout />}>
+                  <Route element={<ProtectedRoute role="admin" />}>
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="transactions" element={<Transactions />} />
+                    <Route
+                      path="transactions/:TransactionId"
+                      element={<Booking />}
+                    />
+                    <Route
+                      path="confirm/:TransactionId"
+                      element={<Checkin />}
+                    />
+                    <Route path="all-users" element={<UsersList />} />
+                    <Route path="all-reviews" element={<Cabins />} />
+                    <Route path="users" element={<Users />} />
+                    <Route path="charges" element={<Settings />} />
+                    <Route path="account" element={<Account />} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
-            <Route
-              path="/:userId/verify/:token"
-              element={<VerifyEmailPage />}
-            />
-          </Routes>
-        </BrowserRouter>
+              <Route path="/login" element={<Login />} />
+              <Route path="signup" element={<SignUp />} />
+              <Route
+                path="/:userId/verify/:token"
+                element={<VerifyEmailPage />}
+              />
+            </Routes>
+          </BrowserRouter>
+        </GoogleOAuthProvider>
         <Toaster
           position="top-center"
           gutter={12}

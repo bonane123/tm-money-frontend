@@ -50,8 +50,7 @@ function HeaderMenu({ isOpen }) {
           <StyledNavLink to="/reviews">Reviews</StyledNavLink>
         </li>
         <li>
-          {/* <StyledNavLink to="/login">Login</StyledNavLink> */}
-          <div id="signInDiv"></div>
+          <StyledNavLink to="/login">Try Now</StyledNavLink>
         </li>
         <li style={{ paddingLeft: "1.2rem" }}>
           <DarkModeToggle />

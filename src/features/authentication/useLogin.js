@@ -11,9 +11,7 @@ export function useLogin() {
   const { mutate: login, isLoading } = useMutation(loginAPI, {
     onSuccess: (data) => {
       queryClient.setQueryData(["user"], data.data.user);
-      toast.success(
-        "Login successful"
-      );
+      toast.success("Login successful");
       localStorage.setItem("tm-user-access", JSON.stringify(data));
 
       if (
@@ -23,7 +21,7 @@ export function useLogin() {
         navigate("/dashboard", { replace: true });
       navigate("/");
     },
-    
+
     onError: (err) => {
       console.error("Login error:", err);
       toast.error("The provided email or password are incorrect"); // Display an error
