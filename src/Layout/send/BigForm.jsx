@@ -25,6 +25,11 @@ const StyledPElement = styled.p`
   margin-bottom: 0;
 `;
 
+const StyledUSD = styled.p`
+  color: var(--color-orange-700);
+  font-weight: 800;
+`;
+
 const StyledNames = styled.div`
   display: flex;
   align-items: center;
@@ -88,7 +93,9 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [transferCurrency, setTransferCurrency] = useState("");
   const [loading, setLoading] = useState(false);
-  const [newCharges, setNewCharges] = useState(null);
+  const [amountLoading, setAmountLoading] = useState(false);
+  // const [newCharges, setNewCharges] = useState(null);
+  const [exchange, setExchange] = useState(null);
   const { user, isLoading } = useUser();
 
   const { data, isChargesLoading } = useCharges();
@@ -97,37 +104,49 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   const navigate = useNavigate();
 
   var myHeaders = new Headers();
-  myHeaders.append("apikey", "Z3j2e55HJl4Y9IT767CZ2HulW3Y7rGQK");
-  var requestOptions = {
-    method: "GET",
-    redirect: "follow",
-    headers: myHeaders,
-  };
+    myHeaders.append("apikey", "Z3j2e55HJl4Y9IT767CZ2HulW3Y7rGQK");
+    var requestOptions = {
+      method: "GET",
+      redirect: "follow",
+      headers: myHeaders,
+    };
 
-  useEffect(() => {
-    // Move fetchData out of useEffect to reduce request that users sends to the server
-    const fetchData = async (transferCurrency) => {
+    useEffect(() => {
+      setAmountLoading(true);
+      const fetchDataAndSetState = async () => {
+        try {
+          const result = await fetchData();
+          setExchange(result);
+        } catch (error) {
+          console.error(error);
+        }
+        setAmountLoading(false);
+      };
+  
+      fetchDataAndSetState();
+    }, []);
+
+    const fetchData = async (amount = 1, to = "KRW", from = "USD") => {
       setLoading(true);
+      let result;
+    
       try {
         const response = await fetch(
-          `https://api.apilayer.com/exchangerates_data/convert?to=${
-            selectedCountry.currency
-          }&from=${transferCurrency}&amount=${1}`,
+          `https://api.apilayer.com/exchangerates_data/convert?to=${to}&from=${from}&amount=${amount}`,
           requestOptions
         );
+    
         const data = await response.json();
-
-        updateAnswer(data.result);
-        setLoading(false);
+        result = data.result;
+        updateAnswer(result);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
+    
       setLoading(false);
+      return result;
     };
-    fetchData();
-  }, [selectedCountry, transferCurrency]);
-
-  // Call the fetchData function inside useEffect
+    
 
   const handleCountryChange = (selectedCountryId) => {
     const country = countriesList.find((c) => c._id === selectedCountryId);
@@ -151,9 +170,6 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     if (amount <= 50000) {
       chargePercentage = 5000;
       transferFees = 5000;
-      // } else if (transferCurrency === "USD" && amount <= 5) {
-      //   chargePercentage = 5;
-      //   transferFees = 5;
     } else {
       for (const charge of data) {
         if (amount >= charge.minAmount && amount <= charge.maxAmount) {
@@ -167,39 +183,19 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     return { transferFees, chargePercentage };
   };
 
-  // const handleCurrencyChange = async (e) => {
-  //   // console.log(e.target.value);
-  //   if (e.target.value === 'USD') {
-  //     setLoading(true);
-  //     try {
-  //       const response = await fetch(
-  //         `https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=${1}`,
-  //         requestOptions
-  //       );
-  //       const data = await response.json();
-
-  //       setNewCharges(data.result);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //     setLoading(false);
-  //   }else {
-  //     setNewCharges(1)
-  //   }
-  //   console.log(newCharges)
-  // }
-
   const handleAmountChange = (e) => {
-    const amount = parseFloat(e.target.value);
-    const { transferFees, chargePercentage } = calculateTransferFees(amount);
+    const amountUSD = parseFloat(e.target.value);
+    console.log(amountUSD);
+    const amountKRW = amountUSD  * exchange;
+    console.log(amountKRW);
+    const { transferFees, chargePercentage } = calculateTransferFees(amountKRW);
 
-    const updatedReceiverGets = (amount - transferFees) * answer;
+    const updatedReceiverGets = (amountKRW - transferFees) * answer;
     setValue("transferFees", transferFees);
     setValue("receiverGets", updatedReceiverGets);
     setValue("percentageCharges", chargePercentage);
     updateFormData({
-      amountToSend: amount,
+      amountToSend: amountKRW,
       transferFees: transferFees,
       receiverGets: updatedReceiverGets,
       percentageCharges: chargePercentage,
@@ -217,11 +213,10 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     };
 
     try {
-      createNewTransaction({
-        transaction: formDataWithUser,
-      });
-
-      navigate("/transactions/users"); 
+      // createNewTransaction({
+      //   transaction: formDataWithUser,
+      // });
+      // navigate("/transactions/users");
     } catch (error) {
       console.error("Transaction creation failed:", error);
     }
@@ -257,18 +252,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       <StyledNames>
         <StyledName>
           <StyledLabel htmlFor="currency-to-send">Currency To Send</StyledLabel>
-          <StyledSelect
-            id="currency-to-send"
-            disabled={isTransactionLoading}
-            type="text"
-            required
-            {...register("currencyToSend")}
-            // onChange={handleCurrencyChange}
-          >
-            {/* <option value="">Select a currency</option> */}
-            <option value="KRW">KRW</option>
-            <option value="USD">USD</option>
-          </StyledSelect>
+          <StyledUSD>USD</StyledUSD>
         </StyledName>
       </StyledNames>
       <StyledPElement>Destination Information</StyledPElement>
@@ -347,15 +331,15 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       <StyledNames>
         <StyledName>
           <StyledLabel htmlFor="amount-to-send">
-            Amount To Send (minimum is 5000 krw Or $5)
+            Amount To Send (minimum is $5)
           </StyledLabel>
           <StyledInput
             type="number"
             id="amount-to-send"
             name="amount-to-send"
-            min={transferCurrency === "USD" ? 5 : 5000}
-            step="1"
-            disabled={isTransactionLoading}
+            min={5}
+            step="5"
+            disabled={isTransactionLoading || amountLoading}
             required
             {...register("amountToSend")}
             onChange={handleAmountChange}

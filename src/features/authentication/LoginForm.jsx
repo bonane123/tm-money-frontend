@@ -22,7 +22,7 @@ const StyledSignupSpace = styled.div`
 
 function LoginForm() {
   const { isLoading, login } = useLogin();
-  // const { googleLogin, isGoogleLoading } = useGoogleAuth();
+  const { googleLogin } = useGoogleAuth();
   const { register, formState, handleSubmit, reset } = useForm();
   const { errors } = formState;
 
@@ -106,8 +106,7 @@ function LoginForm() {
           </Button> */}
         <GoogleLogin
           onSuccess={(credentialResponse) => {
-            console.log(credentialResponse);
-            googleAuth(credentialResponse)
+            googleLogin(credentialResponse)
           }}
           onError={() => {
             console.log("Login Failed");

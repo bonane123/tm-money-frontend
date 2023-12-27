@@ -29,7 +29,6 @@ export const login = async ({ email, password }) => {
 
 export const googleAuth = async (credentialResponse) => {
   try {
-    console.log(credentialResponse)
     const response = await fetch(`${URL}/users/google_auth`, {
       method: "POST",
       headers: {
@@ -43,6 +42,7 @@ export const googleAuth = async (credentialResponse) => {
       console.log(`HTTP Error status: ${response.status}`);
     }
     const data = await response.json();
+    console.log(data)
     return data;
   } catch (error) {
     console.log(error);
