@@ -40,16 +40,20 @@ const FormContainer = styled.div`
 
 const SendMoney = () => {
   const [formData, setFormData] = useState({
-    'amount-to-send': 0,
-    'transfer-fees': 0,
-    'receiver-gets': 0,
-    'transferCurrency': '',
-    'answer': 0
+    "amount-to-send": 0,
+    "transfer-fees": 0,
+    "receiver-gets": 0,
+    transferCurrency: "",
+    answer: 0,
   });
-  const [answer, setAnswer] = useState(""); 
+  const [answer, setAnswer] = useState("");
 
   const updateFormData = (data, newAnswer) => {
-    setFormData({ ...data, answer: newAnswer });
+    setFormData((prevData) => ({
+      ...prevData,
+      ...data,
+      answer: newAnswer,
+    }));
   };
 
   const updateAnswer = (newAnswer) => {
@@ -69,7 +73,11 @@ const SendMoney = () => {
         </p>
         <hr />
         <FormContainer>
-        <BigForm updateFormData={updateFormData} updateAnswer={updateAnswer} answer={answer}/>
+          <BigForm
+            updateFormData={updateFormData}
+            updateAnswer={updateAnswer}
+            answer={answer}
+          />
           <MiniForm formData={formData} answer={answer} />
         </FormContainer>
       </Container>

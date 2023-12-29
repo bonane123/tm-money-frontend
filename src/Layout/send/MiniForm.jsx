@@ -66,7 +66,7 @@ function MiniForm({formData, answer}) {
     // Update the current time every second
     const interval = setInterval(() => {
       setCurrentTime(new Date());
-    }, 1000);
+    }, 24 * 60 * 60 * 1000);
 
     // Clear the interval on component unmount
     return () => clearInterval(interval);
@@ -77,7 +77,7 @@ function MiniForm({formData, answer}) {
   const senderAmount = parseFloat(formData['amountToSend']) || 0;
   const transferFees = parseFloat(formData['transferFees']) || 0;
   const percentageCharges = formData['percentageCharges'];
-  const receiverAmount =senderAmount - transferFees;
+  const receiverAmount = formData['receiverGets'];
 
   let newCharge = '';
   if (percentageCharges === 5000){
@@ -95,7 +95,7 @@ function MiniForm({formData, answer}) {
             <p>Data and Time:</p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>{format(currentTime, "M/d/yyyy, h:mm:ss a")}</p>
+            <p>{format(currentTime, "M/d/yyyy")}</p>
           </StyledLeftDiv>
         </StyledDateTime>
         <StyledDateTime>
@@ -106,14 +106,14 @@ function MiniForm({formData, answer}) {
             <p>{transferCurrency} {parseFloat(senderAmount).toFixed(2)}</p>
           </StyledLeftDiv>
         </StyledDateTime>
-        <StyledDateTime>
+        {/* <StyledDateTime>
           <StyledRightDiv>
             <p>Received Amount:</p>
           </StyledRightDiv>
           <StyledLeftDiv>
             <p>{transferCurrency} {parseFloat(receiverAmount).toFixed(2)}</p>
           </StyledLeftDiv>
-        </StyledDateTime>
+        </StyledDateTime> */}
         <StyledDateTime>
           <StyledRightDiv>
             <p>Transfer Fees: </p>
@@ -138,7 +138,7 @@ function MiniForm({formData, answer}) {
           <p>Recipient Gets:</p>
         </StyledRightSpecial>
         <StyledLeftSpecial>
-          <p>{destinationCurrency} {(parseFloat(receiverAmount) * answer).toFixed(2)}</p>
+          <p>{destinationCurrency} {parseFloat(receiverAmount)}</p>
         </StyledLeftSpecial>
       </StyledDateTime>
       <StyledRemark>

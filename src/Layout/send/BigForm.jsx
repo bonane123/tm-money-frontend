@@ -81,7 +81,7 @@ const StyledSelect = styled.select`
 
 const StyledSendButton = styled.button`
   max-width: 20rem;
-  background-color: var(--color-orange-700);
+  background-color: var(--color-orange-700);1
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -91,7 +91,7 @@ const StyledSendButton = styled.button`
 function BigForm({ updateFormData, updateAnswer, answer }) {
   const { register, handleSubmit, setValue, control } = useForm();
   const [selectedCountry, setSelectedCountry] = useState("");
-  const [transferCurrency, setTransferCurrency] = useState("");
+  const [transferCurrency, setTransferCurrency] = useState("KRW");
   const [loading, setLoading] = useState(false);
   const [amountLoading, setAmountLoading] = useState(false);
   // const [newCharges, setNewCharges] = useState(null);
@@ -104,23 +104,29 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   const { createNewTransaction, isTransactionLoading } = useCreateTransaction();
   const navigate = useNavigate();
 
+  const INITIAL_AMOUNT = 1;
+
   useEffect(() => {
-    fetchDataAndSetState();
+    fetchDataAndSetState("firstExchange", INITIAL_AMOUNT);
   }, []);
 
   const fetchDataAndSetState = async (
-    setStateFunction = setExchange,
+    toExchange,
     amount = 1,
     to = "KRW",
     from = "USD"
   ) => {
     setAmountLoading(true);
     try {
-      const result = await fetchData(amount, to, from); // Replace with your actual fetchData implementation
-      setStateFunction(() => {
-        // Using a callback to ensure that we're updating based on the latest state
-        return result;
-      });
+      const result = await fetchData(amount, to, from); 
+      console.log(result, from, to)// Replace with your actual fetchData implementation
+      if (toExchange === 'firstExchange'){
+        setExchange(result);
+      }
+      else if (toExchange === 'lastExchange'){
+        setNewExchange(result);
+      }
+      // console.log(result);
     } catch (error) {
       console.error(error);
     }
@@ -138,6 +144,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     setLoading(true);
     let result;
     try {
+      // console.log(amount, to, from);
       const response = await fetch(
         `https://api.apilayer.com/exchangerates_data/convert?to=${to}&from=${from}&amount=${amount}`,
         requestOptions
@@ -193,32 +200,37 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     // console.log(amountKRW);
     const { transferFees, chargePercentage } = calculateTransferFees(amountKRW);
 
-    const updatedReceiverGets = (amountKRW - transferFees) * answer;
+    const updatedReceiverGets = amountKRW - transferFees;
     // If the selectedCountry.currency is available then calculate the transfer amount
     // by taking updatedReceiverGets and call function
     // fetchData(to=selectedCountry.currency, from=KRW, amount=updatedReceiverGets)
     setLoading(true);
     try {
-      fetchDataAndSetState(
-        updatedReceiverGets,
-        selectedCountry.currency,
-        "KRW"
-      );
-      setValue("transferFees", transferFees);
-      setValue("receiverGets", newExchange);
-      setValue("percentageCharges", chargePercentage);
-      updateFormData({
-        amountToSend: amountKRW,
-        transferFees: transferFees,
-        receiverGets: updatedReceiverGets,
-        percentageCharges: chargePercentage,
-        transferCurrency: transferCurrency,
-        destinationCurrency: selectedCountry ? selectedCountry.currency : "KRW",
-      });
+      if (updatedReceiverGets >= 0) {
+        fetchDataAndSetState(
+          "lastExchange",
+          INITIAL_AMOUNT,
+          selectedCountry.currency,
+          "KRW"
+        );
+        setValue("transferFees", transferFees);
+        setValue("receiverGets", newExchange);
+        setValue("percentageCharges", chargePercentage);
+        updateFormData({
+          amountToSend: amountKRW,
+          transferFees: transferFees,
+          receiverGets: updatedReceiverGets * newExchange,
+          percentageCharges: chargePercentage,
+          transferCurrency: transferCurrency,
+          destinationCurrency: selectedCountry
+            ? selectedCountry.currency
+            : "KRW",
+        });
+        // console.log(updatedReceiverGets, amountUSD, chargePercentage, newExchange);
+      }
     } catch (error) {
       console.log(error);
     }
-    console.log(amountUSD, chargePercentage, newExchange);
     setLoading(false);
   };
 
@@ -357,7 +369,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
             name="amount-to-send"
             min={5}
             step="5"
-            disabled={isTransactionLoading || amountLoading}
+            disabled={isTransactionLoading}
             required
             {...register("amountToSend")}
             onChange={handleAmountChange}
