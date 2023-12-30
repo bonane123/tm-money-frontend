@@ -81,7 +81,7 @@ const StyledSelect = styled.select`
 
 const StyledSendButton = styled.button`
   max-width: 20rem;
-  background-color: var(--color-orange-700);1
+  background-color: var(--color-orange-700);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;

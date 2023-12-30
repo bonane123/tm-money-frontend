@@ -47,18 +47,22 @@ const SendMoney = () => {
     answer: 0,
   });
   const [answer, setAnswer] = useState("");
+  const [miniFormKey, setMiniFormKey] = useState(0);
 
-  const updateFormData = (data, newAnswer) => {
+  const updateFormData = (data, newAnswer, callback) => {
     setFormData((prevData) => ({
       ...prevData,
       ...data,
       answer: newAnswer,
     }));
+    callback();
   };
 
   const updateAnswer = (newAnswer) => {
     setAnswer(newAnswer);
-    updateFormData(formData, newAnswer);
+    updateFormData(formData, newAnswer, () => {
+      setMiniFormKey((prevKey) => prevKey + 1);
+    });
   };
   return (
     <Main>
@@ -78,7 +82,7 @@ const SendMoney = () => {
             updateAnswer={updateAnswer}
             answer={answer}
           />
-          <MiniForm formData={formData} answer={answer} />
+          <MiniForm key={miniFormKey} formData={formData} answer={answer} />
         </FormContainer>
       </Container>
     </Main>
