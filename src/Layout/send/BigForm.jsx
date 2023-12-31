@@ -119,7 +119,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     setAmountLoading(true);
     try {
       const result = await fetchData(amount, to, from); 
-      console.log(result, from, to)// Replace with your actual fetchData implementation
+      // console.log(result, from, to)
       if (toExchange === 'firstExchange'){
         setExchange(result);
       }
@@ -195,16 +195,13 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
   const handleAmountChange = (e) => {
     const amountUSD = parseFloat(e.target.value);
-    // console.log(amountUSD);
     const amountKRW = amountUSD * exchange;
-    // console.log(amountKRW);
     const { transferFees, chargePercentage } = calculateTransferFees(amountKRW);
-
+  
     const updatedReceiverGets = amountKRW - transferFees;
-    // If the selectedCountry.currency is available then calculate the transfer amount
-    // by taking updatedReceiverGets and call function
-    // fetchData(to=selectedCountry.currency, from=KRW, amount=updatedReceiverGets)
+  
     setLoading(true);
+    console.log(INITIAL_AMOUNT,selectedCountry.currency ? selectedCountry.currency : 'USD')
     try {
       if (updatedReceiverGets >= 0) {
         fetchDataAndSetState(
@@ -213,26 +210,29 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
           selectedCountry.currency,
           "KRW"
         );
+        const newUpdatedReceiverGets = updatedReceiverGets * newExchange
         setValue("transferFees", transferFees);
-        setValue("receiverGets", newExchange);
+        setValue("receiverGets", newUpdatedReceiverGets);
         setValue("percentageCharges", chargePercentage);
-        updateFormData({
-          amountToSend: amountKRW,
-          transferFees: transferFees,
-          receiverGets: updatedReceiverGets * newExchange,
-          percentageCharges: chargePercentage,
-          transferCurrency: transferCurrency,
-          destinationCurrency: selectedCountry
-            ? selectedCountry.currency
-            : "KRW",
-        });
-        // console.log(updatedReceiverGets, amountUSD, chargePercentage, newExchange);
+        updateFormData(
+          {
+            amountToSend: amountKRW,
+            transferFees: transferFees,
+            receiverGets: newUpdatedReceiverGets,
+            percentageCharges: chargePercentage,
+            transferCurrency: transferCurrency,
+            destinationCurrency: selectedCountry
+              ? selectedCountry.currency
+              : "KRW",
+          },
+        );
       }
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
+  
 
   const onSubmit = (data) => {
     console.log(data);
@@ -300,7 +300,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
                   handleCountryChange(e.target.value);
                 }}
               >
-                <option value="" disabled>
+                <option value="">
                   Select a country
                 </option>
                 {countriesList.map((country) => (
@@ -368,7 +368,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
             id="amount-to-send"
             name="amount-to-send"
             min={5}
-            step="5"
+            step="1"
             disabled={isTransactionLoading}
             required
             {...register("amountToSend")}
