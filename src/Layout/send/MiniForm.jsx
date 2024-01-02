@@ -1,6 +1,5 @@
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { styled } from 'styled-components';
 
 const StyledMiniForm = styled.div`
@@ -61,14 +60,7 @@ font-size: 1.5rem;
 
 function MiniForm({formData, answer}) {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [destinationCurrency, setDestinationCurrency] = useState('');
-  const [transferCurrency, setTransferCurrency] = useState('');
-  const [senderAmount, setSenderAmount] = useState(0);
-  const [transferFees, setTransferFees] = useState(0);
-  const [percentageCharges, setPercentageCharges] = useState('');
-  const [receiverAmount, setReceiverAmount] = useState('');
-
-
+  const { destinationCurrency, transferCurrency } = formData;
 
   useEffect(() => {
     // Update the current time every second
@@ -79,31 +71,20 @@ function MiniForm({formData, answer}) {
     // Clear the interval on component unmount
     return () => clearInterval(interval);
   }, []);
-  
-  useEffect(() => {
-    // Update state when props change
-    setDestinationCurrency(formData.destinationCurrency || '');
-    setTransferCurrency(formData.transferCurrency || '');
-    setSenderAmount(parseFloat(formData.amountToSend) || 0);
-    setTransferFees(parseFloat(formData.transferFees) || 0);
-    setPercentageCharges(formData.percentageCharges || '');
-    setReceiverAmount(formData.receiverGets || '');
-    console.log('formData:', formData);
-  }, [formData, answer]);
 
   // console.log(selectedCurrency)
 
-  // const senderAmount = parseFloat(formData['amountToSend']) || 0;
-  // const transferFees = parseFloat(formData['transferFees']) || 0;
-  // const percentageCharges = formData['percentageCharges'] || 0;
-  // const receiverAmount = formData['receiverGets'] || 0;
+  const senderAmount = parseFloat(formData['amountToSend']) || 0;
+  const transferFees = parseFloat(formData['transferFees']) || 0;
+  const percentageCharges = formData['percentageCharges'] || 0;
+  const receiverAmount = formData['receiverGets'] || 0;
 
   let newCharge = '';
   if (percentageCharges === 5000){
     newCharge = `${transferCurrency} ${percentageCharges}`
   }
   else newCharge = `${percentageCharges * 100}%`;
-  // console.log(senderAmount, receiverAmount, newCharge, percentageCharges);
+  console.log(senderAmount, receiverAmount, newCharge, percentageCharges);
   return (
     <StyledMiniForm>
       <StyledH2>YOUR INVOICE WILL LOOK LIKE THIS</StyledH2>
@@ -167,17 +148,5 @@ function MiniForm({formData, answer}) {
     </StyledMiniForm>
   );
 }
-
-MiniForm.propTypes = {
-  formData: PropTypes.shape({
-    destinationCurrency: PropTypes.string,
-    transferCurrency: PropTypes.string,
-    amountToSend: PropTypes.number,
-    transferFees: PropTypes.number,
-    percentageCharges: PropTypes.string,
-    receiverGets: PropTypes.number,
-  }),
-  answer: PropTypes.number,
-};
 
 export default MiniForm;
