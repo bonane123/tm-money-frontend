@@ -94,7 +94,6 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   const [transferCurrency, setTransferCurrency] = useState("KRW");
   const [loading, setLoading] = useState(false);
   const [amountLoading, setAmountLoading] = useState(false);
-  // const [newCharges, setNewCharges] = useState(null);
   const [exchange, setExchange] = useState(null);
   const [newExchange, setNewExchange] = useState(null);
   const { user, isLoading } = useUser();
@@ -106,34 +105,11 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
   const INITIAL_AMOUNT = 1;
 
-  useEffect(() => {
-    fetchDataAndSetState("firstExchange", INITIAL_AMOUNT);
-  }, []);
+  let updatedReceiverGetsValue = null;
 
-  const fetchDataAndSetState = async (
-    toExchange,
-    amount = 1,
-    to = "KRW",
-    from = "USD"
-  ) => {
-    setAmountLoading(true);
-    try {
-      const result = await fetchData(amount, to, from); 
-      // console.log(result, from, to)
-      if (toExchange === 'firstExchange'){
-        setExchange(result);
-      }
-      else if (toExchange === 'lastExchange'){
-        setNewExchange(result);
-      }
-      // console.log(result);
-    } catch (error) {
-      console.error(error);
-    }
-    setAmountLoading(false);
-  };
-
+  // Function to fetch exchange data
   const fetchData = async (amount = 1, to = "KRW", from = "USD") => {
+    console.log("Fetching data with amount:", amount, "to:", to, "from:", from);
     var myHeaders = new Headers();
     myHeaders.append("apikey", "Z3j2e55HJl4Y9IT767CZ2HulW3Y7rGQK");
     var requestOptions = {
@@ -159,12 +135,56 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     return result;
   };
 
+  // Fetch exchange data when component mounts
+  useEffect(() => {
+    const fetchExchangeData = async () => {
+      const result = await fetchData(INITIAL_AMOUNT);
+      setExchange(result);
+    };
+
+    fetchExchangeData();
+  }, []);
+
+  // Function to fetch new exchange data based on selected country
+  const fetchNewExchangeData = async () => {
+    if (selectedCountry) {
+      const result = await fetchData(
+        INITIAL_AMOUNT,
+        selectedCountry.currency,
+        "KRW"
+      );
+      setNewExchange(result);
+    }
+  };
+
+  // const fetchDataAndSetState = async (
+  //   toExchange,
+  //   amount = 1,
+  //   to = "KRW",
+  //   from = "USD"
+  // ) => {
+  //   setAmountLoading(true);
+  //   try {
+  //     const result = await fetchData(amount, to, from);
+  //     // console.log(result, from, to)
+  //     if (toExchange === 'firstExchange'){
+  //       setExchange(result);
+  //     }
+  //     else if (toExchange === 'lastExchange'){
+  //       setNewExchange(result);
+  //     }
+  //     // console.log(result);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  //   setAmountLoading(false);
+  // };
+
   const handleCountryChange = (selectedCountryId) => {
     const country = countriesList.find((c) => c._id === selectedCountryId);
     setSelectedCountry(country);
-    // setValue("currencyToSend", transferCurrency);
-    // setValue("currency", country.currency);
     setValue("account", country.account[0]); // Select the first account by default
+    fetchNewExchangeData();
   };
 
   if (isChargesLoading || isCountriesLoading) {
@@ -193,46 +213,57 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     return { transferFees, chargePercentage };
   };
 
+  // Handle amount change using the already fetched exchange and newExchange data
   const handleAmountChange = (e) => {
     const amountUSD = parseFloat(e.target.value);
     const amountKRW = amountUSD * exchange;
+
     const { transferFees, chargePercentage } = calculateTransferFees(amountKRW);
-  
+
     const updatedReceiverGets = amountKRW - transferFees;
-  
+
     setLoading(true);
-    console.log(INITIAL_AMOUNT,selectedCountry.currency ? selectedCountry.currency : 'USD')
+
     try {
       if (updatedReceiverGets >= 0) {
-        fetchDataAndSetState(
-          "lastExchange",
-          INITIAL_AMOUNT,
-          selectedCountry.currency,
-          "KRW"
-        );
-        const newUpdatedReceiverGets = updatedReceiverGets * newExchange
+        console.log(newExchange);
+        if (newExchange === null || newExchange === 0) {
+          console.log(updatedReceiverGets);
+          updatedReceiverGetsValue = updatedReceiverGets;
+        } else {
+          updatedReceiverGetsValue = updatedReceiverGets * newExchange;
+        }
+        console.log(updatedReceiverGetsValue);
         setValue("transferFees", transferFees);
-        setValue("receiverGets", newUpdatedReceiverGets);
+        setValue("receiverGets", updatedReceiverGetsValue);
         setValue("percentageCharges", chargePercentage);
-        updateFormData(
-          {
-            amountToSend: amountKRW,
-            transferFees: transferFees,
-            receiverGets: newUpdatedReceiverGets,
-            percentageCharges: chargePercentage,
-            transferCurrency: transferCurrency,
-            destinationCurrency: selectedCountry
-              ? selectedCountry.currency
-              : "KRW",
-          },
-        );
+
+        updateFormData({
+          amountToSend: amountKRW,
+          transferFees: transferFees,
+          receiverGets: updatedReceiverGetsValue,
+          percentageCharges: chargePercentage,
+          transferCurrency: transferCurrency,
+          destinationCurrency: selectedCountry
+            ? selectedCountry.currency
+            : "KRW",
+        });
+        console.log("Updated Form Data:", {
+          amountToSend: amountKRW,
+          transferFees: transferFees,
+          receiverGets: updatedReceiverGetsValue,
+          percentageCharges: chargePercentage,
+          transferCurrency: transferCurrency,
+          destinationCurrency: selectedCountry
+            ? selectedCountry.currency
+            : "KRW",
+        });
       }
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
-  
 
   const onSubmit = (data) => {
     console.log(data);
@@ -300,9 +331,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
                   handleCountryChange(e.target.value);
                 }}
               >
-                <option value="">
-                  Select a country
-                </option>
+                <option value="">Select a country</option>
                 {countriesList.map((country) => (
                   <option key={country._id} value={country._id}>
                     {country.name}

@@ -60,31 +60,35 @@ font-size: 1.5rem;
 
 function MiniForm({formData, answer}) {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [senderAmount, setSenderAmount] = useState(0);
+  const [transferFees, setTransferFees] = useState(0);
+  const [percentageCharges, setPercentageCharges] = useState(0);
+  const [receiverAmount, setReceiverAmount] = useState(0);
   const { destinationCurrency, transferCurrency } = formData;
 
+
   useEffect(() => {
-    // Update the current time every second
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 24 * 60 * 60 * 1000);
-
-    // Clear the interval on component unmount
-    return () => clearInterval(interval);
-  }, []);
-
-  // console.log(selectedCurrency)
-
-  const senderAmount = parseFloat(formData['amountToSend']) || 0;
-  const transferFees = parseFloat(formData['transferFees']) || 0;
-  const percentageCharges = formData['percentageCharges'] || 0;
-  const receiverAmount = formData['receiverGets'] || 0;
-
+    // Update other values based on the changes in formData
+    const amountToSend = parseFloat(formData['amountToSend']) || 0;
+    const transferFeesValue = parseFloat(formData['transferFees']) || 0;
+    const percentageChargesValue = formData['percentageCharges'] || 0;
+    const receiverGets = formData['receiverGets'] || 0;
+  
+    // Update other values or states as needed
+    // ...
+    setSenderAmount(amountToSend);
+    setTransferFees(transferFeesValue);
+    setPercentageCharges(percentageChargesValue);
+    setReceiverAmount(receiverGets);
+  
+  }, [formData]);
+  
   let newCharge = '';
   if (percentageCharges === 5000){
     newCharge = `${transferCurrency} ${percentageCharges}`
   }
   else newCharge = `${percentageCharges * 100}%`;
-  console.log(senderAmount, receiverAmount, newCharge, percentageCharges);
+  // console.log(senderAmount, receiverAmount, newCharge, percentageCharges);
   return (
     <StyledMiniForm>
       <StyledH2>YOUR INVOICE WILL LOOK LIKE THIS</StyledH2>
@@ -103,7 +107,7 @@ function MiniForm({formData, answer}) {
             <p>Transfer Amount:</p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>{transferCurrency} {parseFloat(senderAmount).toFixed(2)}</p>
+            <p>{transferCurrency} {Math.round(senderAmount).toLocaleString()}</p>
           </StyledLeftDiv>
         </StyledDateTime>
         {/* <StyledDateTime>
@@ -119,7 +123,7 @@ function MiniForm({formData, answer}) {
             <p>Transfer Fees: </p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>Flat fee: {transferCurrency} {transferFees.toFixed(2)}</p>
+            <p>Flat fee: {transferCurrency} {Math.round(transferFees).toLocaleString()}</p>
             <p>Percentage fee: {newCharge}</p>
           </StyledLeftDiv>
         </StyledDateTime>
@@ -130,7 +134,7 @@ function MiniForm({formData, answer}) {
           <p>Exchange Rate:</p>
         </StyledRightDiv>
         <StyledLeftDiv>
-          <p>{transferCurrency} 1 = {destinationCurrency} {answer}</p>
+          <p>{transferCurrency} 1 = {destinationCurrency} {Math.round(answer).toLocaleString()}</p>
         </StyledLeftDiv>
       </StyledDateTime>
       <StyledDateTime>
@@ -138,7 +142,7 @@ function MiniForm({formData, answer}) {
           <p>Recipient Gets:</p>
         </StyledRightSpecial>
         <StyledLeftSpecial>
-          <p>{destinationCurrency} {parseFloat(receiverAmount)}</p>
+          <p>{destinationCurrency} {Math.round(receiverAmount).toLocaleString()}</p>
         </StyledLeftSpecial>
       </StyledDateTime>
       <StyledRemark>
