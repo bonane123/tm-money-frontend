@@ -107,7 +107,7 @@ function MiniForm({formData, answer}) {
             <p>Transfer Amount:</p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>{transferCurrency} {Math.round(senderAmount).toLocaleString()}</p>
+            <p>{"KRW"} {Math.round(senderAmount).toLocaleString()}</p>
           </StyledLeftDiv>
         </StyledDateTime>
         {/* <StyledDateTime>
@@ -123,7 +123,7 @@ function MiniForm({formData, answer}) {
             <p>Transfer Fees: </p>
           </StyledRightDiv>
           <StyledLeftDiv>
-            <p>Flat fee: {transferCurrency} {Math.round(transferFees).toLocaleString()}</p>
+            <p>Flat fee: {"KRW"} {Math.round(transferFees).toLocaleString()}</p>
             <p>Percentage fee: {newCharge}</p>
           </StyledLeftDiv>
         </StyledDateTime>

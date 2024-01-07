@@ -127,6 +127,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       );
       const data = await response.json();
       result = data.result;
+      console.log(result);
       updateAnswer(result);
     } catch (error) {
       console.error(error);
@@ -153,6 +154,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
         selectedCountry.currency,
         "KRW"
       );
+      console.log(result)
       setNewExchange(result);
     }
   };
@@ -185,6 +187,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     setSelectedCountry(country);
     setValue("account", country.account[0]); // Select the first account by default
     fetchNewExchangeData();
+    // setTransferCurrency("KRW");
   };
 
   if (isChargesLoading || isCountriesLoading) {
@@ -226,14 +229,14 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
     try {
       if (updatedReceiverGets >= 0) {
-        console.log(newExchange);
+        // console.log(exchange, newExchange);
         if (newExchange === null || newExchange === 0) {
-          console.log(updatedReceiverGets);
+          // console.log(updatedReceiverGets);
           updatedReceiverGetsValue = updatedReceiverGets;
         } else {
           updatedReceiverGetsValue = updatedReceiverGets * newExchange;
         }
-        console.log(updatedReceiverGetsValue);
+        // console.log(updatedReceiverGetsValue);
         setValue("transferFees", transferFees);
         setValue("receiverGets", updatedReceiverGetsValue);
         setValue("percentageCharges", chargePercentage);
@@ -398,7 +401,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
             name="amount-to-send"
             min={5}
             step="1"
-            disabled={isTransactionLoading}
+            disabled={isTransactionLoading || loading}
             required
             {...register("amountToSend")}
             onChange={handleAmountChange}
