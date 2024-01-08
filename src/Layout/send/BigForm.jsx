@@ -127,7 +127,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       );
       const data = await response.json();
       result = data.result;
-      console.log(result);
+      // console.log(result);
       updateAnswer(result);
     } catch (error) {
       console.error(error);
@@ -149,38 +149,29 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   // Function to fetch new exchange data based on selected country
   const fetchNewExchangeData = async () => {
     if (selectedCountry) {
-      const result = await fetchData(
-        INITIAL_AMOUNT,
-        selectedCountry.currency,
-        "KRW"
-      );
-      console.log(result)
-      setNewExchange(result);
+      setLoading(true);
+      try {
+        const result = await fetchData(INITIAL_AMOUNT, selectedCountry.currency, "KRW");
+        // console.log(result);
+  
+        // Update the state immediately
+        setNewExchange(result);
+        
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
-
-  // const fetchDataAndSetState = async (
-  //   toExchange,
-  //   amount = 1,
-  //   to = "KRW",
-  //   from = "USD"
-  // ) => {
-  //   setAmountLoading(true);
-  //   try {
-  //     const result = await fetchData(amount, to, from);
-  //     // console.log(result, from, to)
-  //     if (toExchange === 'firstExchange'){
-  //       setExchange(result);
-  //     }
-  //     else if (toExchange === 'lastExchange'){
-  //       setNewExchange(result);
-  //     }
-  //     // console.log(result);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  //   setAmountLoading(false);
-  // };
+  
+  // Use the useEffect hook to handle the side effect after the state has been updated
+  useEffect(() => {
+    // Check if newExchange is not null before calling handleAmountChange
+    if (newExchange !== null) {
+      handleAmountChange({ target: { value: 1 } });
+    }
+  }, [newExchange]);
 
   const handleCountryChange = (selectedCountryId) => {
     const country = countriesList.find((c) => c._id === selectedCountryId);
@@ -218,6 +209,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
   // Handle amount change using the already fetched exchange and newExchange data
   const handleAmountChange = (e) => {
+    console.log(newExchange);
     const amountUSD = parseFloat(e.target.value);
     const amountKRW = amountUSD * exchange;
 
@@ -251,16 +243,16 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
             ? selectedCountry.currency
             : "KRW",
         });
-        console.log("Updated Form Data:", {
-          amountToSend: amountKRW,
-          transferFees: transferFees,
-          receiverGets: updatedReceiverGetsValue,
-          percentageCharges: chargePercentage,
-          transferCurrency: transferCurrency,
-          destinationCurrency: selectedCountry
-            ? selectedCountry.currency
-            : "KRW",
-        });
+        // console.log("Updated Form Data:", {
+        //   amountToSend: amountKRW,
+        //   transferFees: transferFees,
+        //   receiverGets: updatedReceiverGetsValue,
+        //   percentageCharges: chargePercentage,
+        //   transferCurrency: transferCurrency,
+        //   destinationCurrency: selectedCountry
+        //     ? selectedCountry.currency
+        //     : "KRW",
+        // });
       }
     } catch (error) {
       console.log(error);
