@@ -91,9 +91,8 @@ const StyledSendButton = styled.button`
 function BigForm({ updateFormData, updateAnswer, answer }) {
   const { register, handleSubmit, setValue, control } = useForm();
   const [selectedCountry, setSelectedCountry] = useState("");
-  const [transferCurrency, setTransferCurrency] = useState("KRW");
+  const [transferCurrency, setTransferCurrency] = useState("");
   const [loading, setLoading] = useState(false);
-  const [amountLoading, setAmountLoading] = useState(false);
   const [exchange, setExchange] = useState(null);
   const [newExchange, setNewExchange] = useState(null);
   const { user, isLoading } = useUser();
@@ -109,7 +108,6 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
   // Function to fetch exchange data
   const fetchData = async (amount = 1, to = "KRW", from = "USD") => {
-    console.log("Fetching data with amount:", amount, "to:", to, "from:", from);
     var myHeaders = new Headers();
     myHeaders.append("apikey", "Z3j2e55HJl4Y9IT767CZ2HulW3Y7rGQK");
     var requestOptions = {
@@ -120,14 +118,12 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     setLoading(true);
     let result;
     try {
-      // console.log(amount, to, from);
       const response = await fetch(
         `https://api.apilayer.com/exchangerates_data/convert?to=${to}&from=${from}&amount=${amount}`,
         requestOptions
       );
       const data = await response.json();
       result = data.result;
-      // console.log(result);
       updateAnswer(result);
     } catch (error) {
       console.error(error);
@@ -152,9 +148,6 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       setLoading(true);
       try {
         const result = await fetchData(INITIAL_AMOUNT, selectedCountry.currency, "KRW");
-        // console.log(result);
-  
-        // Update the state immediately
         setNewExchange(result);
         
       } catch (error) {
@@ -164,6 +157,12 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       }
     }
   };
+
+  useEffect(() => {
+    if (selectedCountry) {
+      fetchNewExchangeData();
+    }
+  }, [selectedCountry]);
   
   // Use the useEffect hook to handle the side effect after the state has been updated
   useEffect(() => {
@@ -176,10 +175,10 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   const handleCountryChange = (selectedCountryId) => {
     const country = countriesList.find((c) => c._id === selectedCountryId);
     setSelectedCountry(country);
-    setValue("account", country.account[0]); // Select the first account by default
-    fetchNewExchangeData();
-    // setTransferCurrency("KRW");
+    setValue("account", country.account[0]);
+    setTransferCurrency("KRW");
   };
+  
 
   if (isChargesLoading || isCountriesLoading) {
     return <Spinner />;
@@ -209,7 +208,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
   // Handle amount change using the already fetched exchange and newExchange data
   const handleAmountChange = (e) => {
-    console.log(newExchange);
+
     const amountUSD = parseFloat(e.target.value);
     const amountKRW = amountUSD * exchange;
 
@@ -221,21 +220,18 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
 
     try {
       if (updatedReceiverGets >= 0) {
-        // console.log(exchange, newExchange);
         if (newExchange === null || newExchange === 0) {
-          // console.log(updatedReceiverGets);
           updatedReceiverGetsValue = updatedReceiverGets;
         } else {
-          updatedReceiverGetsValue = updatedReceiverGets * newExchange;
+          updatedReceiverGetsValue = Math.round(updatedReceiverGets * newExchange);
         }
-        // console.log(updatedReceiverGetsValue);
-        setValue("transferFees", transferFees);
+        setValue("transferFees", Math.round(transferFees));
         setValue("receiverGets", updatedReceiverGetsValue);
         setValue("percentageCharges", chargePercentage);
 
         updateFormData({
           amountToSend: amountKRW,
-          transferFees: transferFees,
+          transferFees: Math.round(transferFees),
           receiverGets: updatedReceiverGetsValue,
           percentageCharges: chargePercentage,
           transferCurrency: transferCurrency,
@@ -243,16 +239,6 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
             ? selectedCountry.currency
             : "KRW",
         });
-        // console.log("Updated Form Data:", {
-        //   amountToSend: amountKRW,
-        //   transferFees: transferFees,
-        //   receiverGets: updatedReceiverGetsValue,
-        //   percentageCharges: chargePercentage,
-        //   transferCurrency: transferCurrency,
-        //   destinationCurrency: selectedCountry
-        //     ? selectedCountry.currency
-        //     : "KRW",
-        // });
       }
     } catch (error) {
       console.log(error);
@@ -260,7 +246,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     setLoading(false);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     const userId = user.data.user._id;
     const formDataWithUser = {
@@ -269,7 +255,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     };
 
     try {
-      // createNewTransaction({
+      //await createNewTransaction({ 
       //   transaction: formDataWithUser,
       // });
       // navigate("/transactions/users");
@@ -404,7 +390,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
         {loading ? (
           <SpinnerMini />
         ) : (
-          <StyledSendButton disabled={isTransactionLoading || loading}>
+          <StyledSendButton type="submit" disabled={isTransactionLoading || loading}>
             Send Money
           </StyledSendButton>
         )}

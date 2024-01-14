@@ -10,6 +10,7 @@ export function useUsersTransactions(userId) {
   const { isLoading, data, error } = useQuery({
     queryKey: ['userTransactions', userId],
     queryFn: ()=> getUsersTransactions(userId),
+    staleTime: 10
   });
 
   return { isLoading, error, data };

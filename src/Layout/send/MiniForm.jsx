@@ -58,13 +58,13 @@ const StyledRemark = styled.p`
 font-size: 1.5rem;
 `;
 
-function MiniForm({formData, answer}) {
+function MiniForm({formData, answer, destinationCurrency}) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [senderAmount, setSenderAmount] = useState(0);
   const [transferFees, setTransferFees] = useState(0);
   const [percentageCharges, setPercentageCharges] = useState(0);
   const [receiverAmount, setReceiverAmount] = useState(0);
-  const { destinationCurrency, transferCurrency } = formData;
+  const { transferCurrency } = formData;
 
 
   useEffect(() => {
@@ -81,14 +81,13 @@ function MiniForm({formData, answer}) {
     setPercentageCharges(percentageChargesValue);
     setReceiverAmount(receiverGets);
   
-  }, [formData]);
+  }, [formData, destinationCurrency]);
   
   let newCharge = '';
   if (percentageCharges === 5000){
     newCharge = `${transferCurrency} ${percentageCharges}`
   }
   else newCharge = `${percentageCharges * 100}%`;
-  // console.log(senderAmount, receiverAmount, newCharge, percentageCharges);
   return (
     <StyledMiniForm>
       <StyledH2>YOUR INVOICE WILL LOOK LIKE THIS</StyledH2>
@@ -134,7 +133,7 @@ function MiniForm({formData, answer}) {
           <p>Exchange Rate:</p>
         </StyledRightDiv>
         <StyledLeftDiv>
-          <p>{transferCurrency} 1 = {destinationCurrency} {Math.round(answer).toLocaleString()}</p>
+          <p>{transferCurrency ? transferCurrency : "USD"} 1 = {destinationCurrency ? destinationCurrency : "KRW"} {(answer).toLocaleString()}</p>
         </StyledLeftDiv>
       </StyledDateTime>
       <StyledDateTime>

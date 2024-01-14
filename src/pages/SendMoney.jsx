@@ -81,7 +81,7 @@ const SendMoney = () => {
             updateAnswer={updateAnswer}
             answer={answer}
           />
-          <MiniForm formData={formData} answer={answer} />
+          <MiniForm formData={formData} answer={answer} destinationCurrency={formData.destinationCurrency}/>
         </FormContainer>
       </Container>
     </Main>

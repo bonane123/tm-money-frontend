@@ -1,7 +1,19 @@
 import { getAuthToken } from "../utils/auth";
 import { URL } from "./nodejsAPI";
 
-const storedValue = getAuthToken();
+// Function to get the auth token
+const getStoredToken = () => {
+  const storedValue = getAuthToken();
+  if (!storedValue || !storedValue.token) {
+    console.error('Token not available in storedValue');
+    return null; 
+  }
+  return storedValue.token;
+};
+
+// Call getStoredToken at the beginning of the file
+const authToken = getStoredToken();
+
 
 export const getTransactions = async ({page}) => {
   try {
@@ -9,7 +21,7 @@ export const getTransactions = async ({page}) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${storedValue.token}`,
+        Authorization: `Bearer ${authToken}`,
       },
     });
 
@@ -30,7 +42,7 @@ export const getAllTransactions = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${storedValue.token}`,
+        Authorization: `Bearer ${authToken}`,
       },
     });
 
@@ -51,7 +63,7 @@ export const getStatTransactions = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${storedValue.token}`,
+        Authorization: `Bearer ${authToken}`,
       },
     });
 
@@ -68,28 +80,29 @@ export const getStatTransactions = async () => {
 
 export const getUsersTransactions = async (userId) => {
   try {
-    const response = await fetch(
-      `${URL}/transactions/users/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${storedValue.token}`,
-        },
-      }
-    );
+
+    const response = await fetch(`${URL}/transactions/users/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
 
     if (!response.ok) {
       console.log(`HTTP Error status: ${response.status}`);
+      throw new Error(`HTTP Error status: ${response.status}`);
     }
 
     const data = await response.json();
-    // console.log(data)
     return data;
   } catch (error) {
     console.log(error);
+    return { error: error.message };
   }
 };
+
+
 
 export const getToDaysTransactions = async () => {
   try {
@@ -97,7 +110,7 @@ export const getToDaysTransactions = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${storedValue.token}`,
+        Authorization: `Bearer ${authToken}`,
       },
     });
 
@@ -117,7 +130,7 @@ export const getTransaction = async (transactionId) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${storedValue.token}`,
+        Authorization: `Bearer ${authToken}`,
       },
     });
 
@@ -134,22 +147,22 @@ export const getTransaction = async (transactionId) => {
 
 export const createTransaction = async ({ transaction }) => {
   try {
-    // const response = await fetch(`${URL}/transactions`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${storedValue.token}`,
-    //   },
-    //   body: JSON.stringify({ ...transaction }),
-    // });
+    const response = await fetch(`${URL}/transactions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ ...transaction }),
+    });
 
-    // if (!response.ok) {
-    //   console.log(`HTTP Error status: ${response.status}`);
-    // }
+    if (!response.ok) {
+      console.log(`HTTP Error status: ${response.status}`);
+    }
 
-    // const data = await response.json();
+    const data = await response.json();
 
-    // return data;
+    return data;
   } catch (error) {
     console.log(error);
   }
@@ -160,7 +173,7 @@ export const updateTransaction = async (transactionId, transaction) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${storedValue.token}`,
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify(transaction),
     });
