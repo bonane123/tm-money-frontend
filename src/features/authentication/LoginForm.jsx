@@ -9,9 +9,9 @@ import StyledHeader2 from "../../ui/StyledHeaderH2";
 import StyledFormFooter from "../../ui/StyledFormFooter";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { useGoogleAuth } from "./useGoogleAuth";
-import { googleAuth } from "../../services/auth";
+// import { googleAuth } from "../../services/auth";
 
 const StyledSignupSpace = styled.div`
   display: flex;

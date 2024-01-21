@@ -5,7 +5,6 @@ import { URL } from "./nodejsAPI";
 const getStoredToken = () => {
   const storedValue = getAuthToken();
   if (!storedValue || !storedValue.token) {
-    console.error('Token not available in storedValue');
     return null; 
   }
   return storedValue.token;
@@ -80,7 +79,6 @@ export const getStatTransactions = async () => {
 
 export const getUsersTransactions = async (userId) => {
   try {
-
     const response = await fetch(`${URL}/transactions/users/${userId}`, {
       method: "GET",
       headers: {
@@ -88,6 +86,7 @@ export const getUsersTransactions = async (userId) => {
         Authorization: `Bearer ${authToken}`,
       },
     });
+    
 
     if (!response.ok) {
       console.log(`HTTP Error status: ${response.status}`);
@@ -168,6 +167,7 @@ export const createTransaction = async ({ transaction }) => {
   }
 };
 export const updateTransaction = async (transactionId, transaction) => {
+  console.log(transaction, transactionId);
   try {
     const response = await fetch(`${URL}/transactions/${transactionId}`, {
       method: "PATCH",

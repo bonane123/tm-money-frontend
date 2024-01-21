@@ -255,10 +255,10 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
     };
 
     try {
-      //await createNewTransaction({ 
-      //   transaction: formDataWithUser,
-      // });
-      // navigate("/transactions/users");
+      await createNewTransaction({ 
+        transaction: formDataWithUser,
+      });
+      navigate("/transactions/users");
     } catch (error) {
       console.error("Transaction creation failed:", error);
     }

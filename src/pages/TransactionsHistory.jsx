@@ -1,6 +1,7 @@
 
 import styled from "styled-components";
 import TransactionTable from "../Layout/transactions/TransactionTable";
+import Button from "../ui/Button";
 
 
 const Main = styled.main`
@@ -21,10 +22,15 @@ const Container = styled.div`
 
 function TransactionsHistory() {
 
+  const reloadPage = () => {
+    window.location.reload();
+  };
+  
   return (
     <Main>
       <Container>
-        <TransactionTable/>
+      <Button onClick={reloadPage}>Show Updated Transactions</Button>
+        <TransactionTable reloadPage={reloadPage}/>
       </Container>
     </Main>
   );

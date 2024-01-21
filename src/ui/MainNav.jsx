@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import {
   HiOutlineCog6Tooth,
   HiOutlineHome,
-  HiOutlineHomeModern,
   HiOutlineUser,
   HiOutlineUsers,
 } from 'react-icons/hi2';
 import { AiOutlineTransaction } from 'react-icons/ai';
 import { FiMessageCircle } from "react-icons/fi";
+import { FaRegFlag } from "react-icons/fa";
 
 
 const NavList = styled.ul`
@@ -94,6 +94,12 @@ function MainNav() {
           <StyledNavLink to='/charges'>
             <HiOutlineCog6Tooth />
             Charges
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to='/countries'>
+          <FaRegFlag />
+            Countries
           </StyledNavLink>
         </li>
       </NavList>
