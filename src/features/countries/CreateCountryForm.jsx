@@ -9,7 +9,7 @@ import FormRow from "../../ui/FormRow";
 // import { useUpdateReview } from "./useUpdateReview";
 
 function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
-  const { id: editId, ...editValues } = countryToEdit;
+  const { _id: editId, ...editValues } = countryToEdit;
 
 
   const isEditSesson = Boolean(editId);
@@ -55,20 +55,30 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
         <Input
           type="text"
           id="name"
-          // disabled={isWorking}
+          disabled
           {...register("name", {
             required: "this field is required",
           })}
         />
       </FormRow>
-
       <FormRow label="Currency" error={errors?.currency?.message}>
+        <Input
+          type="text"
+          id="currency"
+          disabled
+          {...register("currency", {
+            required: "this field is required",
+          })}
+        />
+      </FormRow>
+
+      <FormRow label="Banks & Accounts" error={errors?.account?.message}>
         <Textarea
-          type="number"
+          type="text"
           id="currency"
           // disabled={isWorking}
           defaultValue=""
-          {...register("currency", {
+          {...register("account", {
             required: "this field is required",
           })}
         />
