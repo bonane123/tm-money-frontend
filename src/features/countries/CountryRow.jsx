@@ -66,22 +66,10 @@ function CountryRow({ countries }) {
                 <Modal.Open opens="edit">
                   <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
                 </Modal.Open>
-
-                <Modal.Open opens="delete">
-                  <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
-                </Modal.Open>
               </Menus.List>
 
               <Modal.Window name="edit">
                 <CreateCountryForm countryToEdit={countries} />
-              </Modal.Window>
-
-              <Modal.Window name="delete">
-                <ConfirmDelete
-                  resourceName="country"
-                //   disabled={isDeletingReview}
-                //   onConfirm={() => deleteReview(ReviewId)}
-                />
               </Modal.Window>
             </Menus.Menu>
           </Modal>

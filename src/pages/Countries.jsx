@@ -1,4 +1,5 @@
 // import Row from '../../ui/Row';
+import AddCountry from '../features/countries/AddCountry';
 import CountriesTable from '../features/countries/CountriesTable';
 // import Heading from '../../ui/Heading';
 
@@ -11,6 +12,7 @@ function Countries() {
     <>
       <Row type='horizontal'>
         <Heading as='h1'>All Countries</Heading>
+        <AddCountry/>
       </Row>
       <Row>
         <CountriesTable />

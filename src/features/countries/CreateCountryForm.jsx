@@ -5,8 +5,8 @@ import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import Textarea from "../../ui/Textarea";
 import FormRow from "../../ui/FormRow";
-// import { useCreateReview } from "./useCreateReview";
-// import { useUpdateReview } from "./useUpdateReview";
+import { useUpdateCountries } from "./useUpdateCountries";
+import { useCreateCountry } from "./useCreateCountry";
 
 function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
   const { _id: editId, ...editValues } = countryToEdit;
@@ -19,31 +19,34 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
 
   const { errors } = formState;
 
-  // const { isCreating, createReview } = useCreateReview();
-  // const { isUpdating, updateSingleReview } = useUpdateReview();
+  const { isCreating, createNewCountry } = useCreateCountry();
+  const { isUpdating, updateSingleCountry } = useUpdateCountries();
 
-  // const isWorking = isUpdating;
+  const isWorking = isUpdating
 
   function onSubmit(data) {
-    // updateSingleReview(
-    //   { newReviewData: { ...data }, id: editId },
-    //   {
-    //     onSuccess: () => {
-    //       reset();
-    //       onCloseModal?.();
-    //     },
-    //   }
-    // );
-    // else
-    //   createReview(
-    //     { ...data },
-    //     {
-    //       onSuccess: () => {
-    //         reset();
-    //         onCloseModal?.();
-    //       },
-    //     }
-    //   );
+    if(editId){
+      updateSingleCountry(
+        { newCountryData: { ...data }, id: editId },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
+
+    }
+    else
+      createNewCountry(
+        { ...data },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
   }
 
   return (
@@ -55,7 +58,7 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
         <Input
           type="text"
           id="name"
-          disabled
+          disabled={isWorking}
           {...register("name", {
             required: "this field is required",
           })}
@@ -65,7 +68,7 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
         <Input
           type="text"
           id="currency"
-          disabled
+          disabled={isWorking}
           {...register("currency", {
             required: "this field is required",
           })}
@@ -76,7 +79,7 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
         <Textarea
           type="text"
           id="currency"
-          // disabled={isWorking}
+          disabled={isWorking}
           defaultValue=""
           {...register("account", {
             required: "this field is required",
@@ -93,7 +96,7 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
           Cancel
         </Button>
         <Button 
-        // disabled={isWorking}
+        disabled={isWorking}
         >
           {isEditSesson ? "Edit Country" : "Add Country"}
         </Button>

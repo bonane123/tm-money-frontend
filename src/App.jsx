@@ -43,39 +43,6 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  //   function handleCallbackResponse(response) {
-  //     var userData = jwtDecode(response.credential);
-  //     console.log(userData)
-
-  //   }
-
-  //   useEffect(() => {
-  //     const script = document.createElement("script");
-  //     script.src = "https://accounts.google.com/gsi/client";
-  //   script.async = true;
-  //   script.defer = true;
-  //   document.head.appendChild(script);
-
-  //   script.onload = () => {
-  //     // Initialize Google Sign-In here
-  //     window.google.accounts.id.initialize({
-  //       client_id:
-  //         "82341067486-2ale8f152hg3as25d8kutml661nm4kcb.apps.googleusercontent.com",
-  //       callback: handleCallbackResponse,
-  //     });
-
-  //     // Corrected renderButton line
-  //     window.google.accounts.id.renderButton(
-  //       document.getElementById("signInDiv"),
-  //       { theme: "outline", size: "large" }
-  //     );
-  //   };
-
-  //   // Clean up the script tag on component unmount
-  //   return () => {
-  //     document.head.removeChild(script);
-  //   };
-  // }, []);
 
   return (
     <DarkModeProvider>
