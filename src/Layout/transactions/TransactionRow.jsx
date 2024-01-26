@@ -8,7 +8,7 @@ import { format } from "date-fns";
 
 const StyledTransactionRow = styled.li`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 1rem;
   align-items: center;
 
@@ -24,6 +24,21 @@ const StyledTransactionRow = styled.li`
 const Guest = styled.div`
   font-weight: 500;
 `;
+const Stacked = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  & span:first-child {
+    font-weight: 500;
+  }
+
+  & span:last-child {
+    color: var(--color-grey-500);
+    font-size: 1.2rem;
+  }
+`;
+
 function TransactionRow({ activity }) {
   const {
     id,
@@ -35,6 +50,9 @@ function TransactionRow({ activity }) {
     destinationCountry,
     destinationAccountDetails,
     createdAt,
+    bank, 
+    bankAccount,
+    name,
   } = activity;
   return (
     <StyledTransactionRow>
@@ -48,6 +66,12 @@ function TransactionRow({ activity }) {
       </div>
       <div>{destinationCountry?.name}</div>
       <div>{destinationAccountDetails}</div>
+      <Stacked>
+        <span>
+          {bank ? bank : ""} {" "}{bankAccount ? bankAccount : ""}
+        </span>
+        <span>{name ? name : ""}</span>
+      </Stacked>
     </StyledTransactionRow>
   );
 }

@@ -88,7 +88,7 @@ const StyledSendButton = styled.button`
   margin-bottom: 2rem;
 `;
 
-function BigForm({ updateFormData, updateAnswer, answer }) {
+function BigForm({ updateFormData, updateAnswer, answer, selectedBank }) {
   const { register, handleSubmit, setValue, control } = useForm();
   const [selectedCountry, setSelectedCountry] = useState("");
   const [transferCurrency, setTransferCurrency] = useState("");
@@ -228,7 +228,6 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
         setValue("transferFees", Math.round(transferFees));
         setValue("receiverGets", updatedReceiverGetsValue);
         setValue("percentageCharges", chargePercentage);
-
         updateFormData({
           amountToSend: amountKRW,
           transferFees: Math.round(transferFees),
@@ -247,10 +246,11 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     const userId = user.data.user._id;
     const formDataWithUser = {
       ...data,
+      ...selectedBank,
       user: userId,
     };
 
@@ -293,7 +293,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
       </StyledNames>
       <StyledNames>
         <StyledName>
-          <StyledLabel htmlFor="currency-to-send">Currency To Send</StyledLabel>
+          <StyledLabel htmlFor="currency-to-send">Sending Currency</StyledLabel>
           <StyledUSD>USD</StyledUSD>
         </StyledName>
       </StyledNames>
@@ -391,7 +391,7 @@ function BigForm({ updateFormData, updateAnswer, answer }) {
           <SpinnerMini />
         ) : (
           <StyledSendButton type="submit" disabled={isTransactionLoading || loading}>
-            Send Money
+            Make Transfer
           </StyledSendButton>
         )}
       </>

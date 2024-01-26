@@ -14,11 +14,12 @@ function TransactionTable() {
   if (!data.transactions.length) return <Empty resourceName="transactions" />;
   return (
     <Menus>
-      <Table columns="0.3fr 1fr 1fr 0.5fr 0.8fr 0.5fr 0.5fr 0.9fr 0.5fr 1rem">
+      <Table columns="0.2fr 0.7fr 1fr 1fr 0.5fr 0.8fr 0.5fr 0.5fr 0.9fr 0.7fr 0.2rem">
         <Table.Header>
           <div>Country</div>
           <div>Sender</div>
           <div>Reciever</div>
+          <div>Our Account</div>
           <div>Dates</div>
           <div>Details</div>
           <div>Account</div>

@@ -31,6 +31,7 @@ import VerifyEmailPage from "./pages/VerifyEmailPage";
 import Cabins from "./pages/Reviews";
 import TransactionsHistory from "./pages/TransactionsHistory";
 import Countries from "./pages/Countries";
+import Banks from "./pages/Banks";
 // import ProtectedDashboard from './utils/ProtectedDashboard';
 
 const queryClient = new QueryClient({
@@ -84,6 +85,7 @@ function App() {
                     <Route path="charges" element={<Settings />} />
                     <Route path="countries" element={<Countries/>} />
                     <Route path="account" element={<Account />} />
+                    <Route path="banks" element={<Banks />} />
                   </Route>
                 </Route>
               </Route>

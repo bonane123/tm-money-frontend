@@ -5,11 +5,11 @@ import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import Textarea from "../../ui/Textarea";
 import FormRow from "../../ui/FormRow";
-import { useUpdateCountries } from "./useUpdateCountries";
-import { useCreateCountry } from "./useCreateCountry";
+// import { useUpdateCountries } from "./useUpdateCountries";
+// import { useCreateBank } from "./useCreateBank";
 
-function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
-  const { _id: editId, ...editValues } = countryToEdit;
+function CreateBankForm({ BankToEdit = {}, onCloseModal }) {
+  const { _id: editId, ...editValues } = BankToEdit;
 
 
   const isEditSesson = Boolean(editId);
@@ -19,15 +19,15 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
 
   const { errors } = formState;
 
-  const { isCreating, createNewCountry } = useCreateCountry();
-  const { isUpdating, updateSingleCountry } = useUpdateCountries();
+  // const { isCreating, createNewBank } = useCreateBank();
+  // const { isUpdating, updateSingleBank } = useUpdateCountries();
 
-  const isWorking = isUpdating
+  // const isWorking = isUpdating
 
   function onSubmit(data) {
     if(editId){
-      updateSingleCountry(
-        { newCountryData: { ...data }, id: editId },
+      updateSingleBank(
+        { newBankData: { ...data }, id: editId },
         {
           onSuccess: () => {
             reset();
@@ -38,7 +38,7 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
 
     }
     else 
-      createNewCountry(
+      createNewBank(
         { ...data },
         {
           onSuccess: () => {
@@ -54,7 +54,7 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
       onSubmit={handleSubmit(onSubmit)}
       type={onCloseModal ? "modal" : "regular"}
     >
-      <FormRow label="Country" error={errors?.name?.message}>
+      <FormRow label="Bank" error={errors?.name?.message}>
         <Input
           type="text"
           id="name"
@@ -98,11 +98,11 @@ function CreateCountryForm({ countryToEdit = {}, onCloseModal }) {
         <Button 
         disabled={isWorking}
         >
-          {isEditSesson ? "Edit Country" : "Add Country"}
+          {isEditSesson ? "Edit Bank" : "Add Bank"}
         </Button>
       </FormRow>
     </Form>
   );
 }
 
-export default CreateCountryForm;
+export default CreateBankForm;

@@ -24,7 +24,18 @@ export const getAllCountries = async () => {
 };
 
 export const createCountry = async (newCountryData) => {
+  const { name, currency, account } = newCountryData;
 
+  let dataObject = { name, currency };
+
+  if (typeof account === 'string') {
+    const dataArray = account.split(',').map(item => item.trim());
+    dataObject.account = dataArray;
+  } else if (Array.isArray(account)) {
+    dataObject.account = account;
+  } else {
+    dataObject.account = [];
+  }
   try {
     const response = await fetch(`${URL}/countries`, {
       method: "POST",
@@ -32,7 +43,7 @@ export const createCountry = async (newCountryData) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${storedValue.token}`,
       },
-      body: JSON.stringify(newCountryData),
+      body: JSON.stringify(dataObject),
     });
 
     if (!response.ok) {
@@ -53,6 +64,16 @@ export const updateCountries = async (countryData) => {
     newCountryData: { account },
   } = countryData;
 
+  let dataObject;
+
+  if (Array.isArray(account)) {
+    dataObject = { account };
+  } else if (typeof account === 'string') {
+    const dataArray = account.split(',').map(item => item.trim());
+    dataObject = { account: dataArray };
+  } else {
+    dataObject = { account: [] };
+  }
   try {
     const response = await fetch(`${URL}/countries/${id}`, {
       method: "PUT",
@@ -60,7 +81,7 @@ export const updateCountries = async (countryData) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${storedValue.token}`,
       },
-      body: JSON.stringify({ account }),
+      body: JSON.stringify(dataObject),
     });
 
     if (!response.ok) {

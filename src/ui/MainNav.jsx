@@ -9,6 +9,7 @@ import {
 import { AiOutlineTransaction } from 'react-icons/ai';
 import { FiMessageCircle } from "react-icons/fi";
 import { FaRegFlag } from "react-icons/fa";
+import { BsBank } from "react-icons/bs";
 
 
 const NavList = styled.ul`
@@ -100,6 +101,12 @@ function MainNav() {
           <StyledNavLink to='/countries'>
           <FaRegFlag />
             Countries
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to='/banks'>
+          <BsBank />
+            Banks
           </StyledNavLink>
         </li>
       </NavList>

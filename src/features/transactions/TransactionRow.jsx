@@ -53,7 +53,10 @@ function TransactionRow({
     amountToSend,
     transferFees,
     createdAt,
-    user
+    user,
+    bank,
+    bankAccount,
+    name,
   },
 }) {
     const navigate = useNavigate();
@@ -81,6 +84,12 @@ function TransactionRow({
         {/* <span>{user.email}</span> */}
       </Stacked>
       <Stacked>
+        <span>
+          {bank ? bank : ""} {" "}{bankAccount ? bankAccount : ""}
+        </span>
+        <span>{name ? name : ""}</span>
+      </Stacked>
+      <Stacked>
         <span>{format(new Date(createdAt), "MMM dd yyyy")}</span>
       </Stacked>
       <Stacked>
@@ -93,7 +102,7 @@ function TransactionRow({
       <Tag type={statusToTagName[status]}>{status}</Tag>
 
       <Amount>{receiverGets.toLocaleString()} {destinationCurrency}</Amount>
-      <Amount>{formatCurrency(transferFees)}</Amount>
+      <Amount>{transferFees.toLocaleString()} KRW</Amount>
 
       <Modal>
         <Menus.Menu>
