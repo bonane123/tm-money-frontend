@@ -19,6 +19,7 @@ import { DarkModeProvider } from "./context/DarkModeContext";
 import UserLayout from "./Layout/UserLayout";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
+import FormStepper from "./pages/FormStepper";
 import SendMoney from "./pages/SendMoney";
 import HelpPage from "./pages/HelpPage";
 import SignUp from "./pages/SignUp";
@@ -56,6 +57,7 @@ function App() {
               <Route element={<UserLayout />}>
                 <Route index element={<HomePage />} />
                 <Route path="about" element={<AboutPage />} />
+                <Route path="stepper" element={<FormStepper />} />
                 <Route path="reviews" element={<HelpPage />} />
                 <Route element={<ProtectedRoute role="user" />}>
                   <Route path="send" element={<SendMoney />} />
