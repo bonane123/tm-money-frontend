@@ -152,26 +152,6 @@ const SendMoney = () => {
     setShowCheckboxes(selectedMethod === "wireTransfer");
   };
 
-  // Function to handle direction radio button change
-  const handleDirectionChange = (direction) => {
-    const bankInfoArray =
-      direction === "RwandaToKorea"
-        ? [
-            { bank: "Bank of Kigali", bankAccount: "100085798361", name: "TM MONEY GROUP" },
-            // { bank: "Equity Bank", bankAccount: "400021782521", name: "TM MONEY GROUP" },
-          ]
-        : [{ bank:"Woori Bank", bankAccount: "1002152136111", name: "NIYIGENA ADOLPHE" }];
-
-    setFormData((prevData) => ({
-      ...prevData,
-      selectedDirection: direction,
-      bankInfo: bankInfoArray,
-    }));
-  };
-  const handleBankItemClick = (bank) => {
-    setSelectedBank(bank);
-  };
-
   return (
     <Main>
       <Container>
@@ -194,6 +174,10 @@ const SendMoney = () => {
             updateFormData={updateFormData}
             updateAnswer={updateAnswer}
             answer={answer}
+            selectedDirection={formData.selectedDirection}
+            bankInfo={formData.bankInfo}
+            paymentMethod={formData.paymentMethod}
+            setFormData={setFormData}
           />
           <MiniForm
             formData={formData}
@@ -201,69 +185,6 @@ const SendMoney = () => {
             destinationCurrency={formData.destinationCurrency}
           />
         </FormContainer>
-        <RadioContainer>
-          <RadioButton>
-            <input
-              type="radio"
-              value="wireTransfer"
-              checked={formData.paymentMethod === "wireTransfer"}
-              onChange={handlePaymentMethodChange}
-            />
-            Wire Transfer
-          </RadioButton>
-          <RadioButton>
-            <input
-              type="radio"
-              value="visaMasterCard"
-              checked={formData.paymentMethod === "visaMasterCard"}
-              onChange={handlePaymentMethodChange}
-            />
-            <p>
-              Visa/MasterCard<SpanEl> (Coming Soon...)</SpanEl>
-            </p>
-          </RadioButton>
-        </RadioContainer>
-
-        {/* Checkboxes for specific payment method options */}
-        {showCheckboxes && (
-          <CheckBoxContainer>
-            <CheckBoxLabel>
-              <CheckBox
-                type="radio"
-                value="RwandaToKorea"
-                checked={formData.selectedDirection === "RwandaToKorea"}
-                onChange={() => handleDirectionChange("RwandaToKorea")}
-              />
-              Rwanda To Korea
-            </CheckBoxLabel>
-            <CheckBoxLabel>
-              <CheckBox
-                type="radio"
-                value="koreaToRwanda"
-                checked={formData.selectedDirection === "koreaToRwanda"}
-                onChange={() => handleDirectionChange("koreaToRwanda")}
-              />
-              Korea To Africa
-            </CheckBoxLabel>
-          </CheckBoxContainer>
-        )}
-
-        {/* Display bank info based on the selected direction */}
-        {formData.bankInfo && (
-          <BankInfoContainer>
-            {formData.bankInfo.map((bank, index) => (
-              <BankInfoItemContainer
-                key={index}
-                isSelected={selectedBank === bank}
-                onClick={() => handleBankItemClick(bank)}
-              >
-                <BankInfoText>Bank: {Object.values(bank)[0]}</BankInfoText>
-                <BankInfoText>Account: {Object.values(bank)[1]}</BankInfoText>
-                <BankInfoText>Holder: {bank.name}</BankInfoText>
-              </BankInfoItemContainer>
-            ))}
-          </BankInfoContainer>
-        )}
       </Container>
     </Main>
   );
