@@ -542,6 +542,22 @@ function BigForm({
               onChange={handleAmountChange}
             />
           </StyledName>
+          <StyledName>
+            <StyledLabel htmlFor="amount-to-send">
+              Receive Amount
+            </StyledLabel>
+            <StyledInput
+              type="number"
+              id="amount-to-receive"
+              name="amount-to-receive"
+              min={5}
+              step="1"
+              disabled={isTransactionLoading || loading}
+              required
+              {...register("amountToSend")}
+              onChange={handleAmountChange}
+            />
+          </StyledName>
         </StyledNames>
       </StepContainer>
       <StepContainer isVisible={step === 2}>
