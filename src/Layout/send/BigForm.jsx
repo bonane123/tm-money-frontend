@@ -201,11 +201,8 @@ function BigForm({
   const [step, setStep] = useState(1);
 
   const handleNext = () => {
-    if (step < 3) {
+    if (step < 2) {
       setStep(step + 1);
-    } else {
-      // Handle form submission logic here
-      console.log("Form submitted!");
     }
   };
 
@@ -213,14 +210,6 @@ function BigForm({
     if (step > 1) {
       setStep(step - 1);
     }
-  };
-
-  // Function to handle radio button change
-  const handlePaymentMethodChange = (event) => {
-    const selectedMethod = event.target.value;
-
-    // Show checkboxes if Wire Transfer is selected
-    setShowCheckboxes(selectedMethod === "wireTransfer");
   };
 
   // Function to handle direction radio button change
@@ -231,11 +220,6 @@ function BigForm({
             {
               bank: "Bank of Kigali",
               bankAccount: "100085798361",
-              name: "TM MONEY GROUP",
-            },
-            {
-              bank: "Equity Bank",
-              bankAccount: "400021782521",
               name: "TM MONEY GROUP",
             },
           ]
@@ -252,6 +236,7 @@ function BigForm({
       selectedDirection: direction,
       bankInfo: bankInfoArray,
     }));
+
   };
   const handleBankItemClick = (bank) => {
     setSelectedBank(bank);
@@ -268,17 +253,17 @@ function BigForm({
     };
     setLoading(true);
     let result;
-    // try {
-    //   const response = await fetch(
-    //     `https://api.apilayer.com/exchangerates_data/convert?to=${to}&from=${from}&amount=${amount}`,
-    //     requestOptions
-    //   );
-    //   const data = await response.json();
-    //   result = data.result;
-    //   updateAnswer(result);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    try {
+      const response = await fetch(
+        `https://api.apilayer.com/exchangerates_data/convert?to=${to}&from=${from}&amount=${amount}`,
+        requestOptions
+      );
+      const data = await response.json();
+      result = data.result;
+      updateAnswer(result);
+    } catch (error) {
+      console.error(error);
+    }
     setLoading(false);
     return result;
   };
@@ -333,13 +318,6 @@ function BigForm({
     setTransferCurrency("KRW");
   };
 
-  if (isChargesLoading || isCountriesLoading) {
-    return <Spinner />;
-  }
-  if (isLoading) {
-    return <Spinner />;
-  }
-
   const calculateTransferFees = (amount) => {
     let transferFees = 0;
     let chargePercentage = 0;
@@ -359,6 +337,7 @@ function BigForm({
     return { transferFees, chargePercentage };
   };
 
+  
   // Handle amount change using the already fetched exchange and newExchange data
   const handleAmountChange = (e) => {
     const amountUSD = parseFloat(e.target.value);
@@ -400,7 +379,7 @@ function BigForm({
   };
 
   const onSubmit = async (data) => {
-    // console.log(data);
+    console.log("Submit form")
     const userId = user.data.user._id;
     const formDataWithUser = {
       ...data,
@@ -408,15 +387,24 @@ function BigForm({
       user: userId,
     };
 
-    try {
-      await createNewTransaction({
-        transaction: formDataWithUser,
-      });
-      navigate("/transactions/users");
-    } catch (error) {
-      console.error("Transaction creation failed:", error);
-    }
+
+    // try {
+    //   await createNewTransaction({
+    //     transaction: formDataWithUser,
+    //   });
+    //   navigate("/transactions/users");
+    // } catch (error) {
+    //   console.error("Transaction creation failed:", error);
+    // }
   };
+
+
+  if (isChargesLoading || isCountriesLoading) {
+    return <Spinner />;
+  }
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
@@ -542,7 +530,7 @@ function BigForm({
               onChange={handleAmountChange}
             />
           </StyledName>
-          <StyledName>
+          {/* <StyledName>
             <StyledLabel htmlFor="amount-to-send">
               Receive Amount
             </StyledLabel>
@@ -557,7 +545,7 @@ function BigForm({
               {...register("amountToSend")}
               onChange={handleAmountChange}
             />
-          </StyledName>
+          </StyledName> */}
         </StyledNames>
       </StepContainer>
       <StepContainer isVisible={step === 2}>
@@ -608,20 +596,16 @@ function BigForm({
         )}
       </StepContainer>
 
-        <StepContainer isVisible={step === 3}>
-          <PgeContainer>If all information is provided, then click make transfer</PgeContainer>
-        </StepContainer>
-
       <NavigationContainer>
         {step !== 1 && (
           <StyledSendButton onClick={handlePrev} disabled={step === 1}>
             Previous
           </StyledSendButton>
         )}
-        {step === 3 ? (
+        {step === 2 ? (
           <StyledSendButton
             type="submit"
-            disabled={isTransactionLoading || loading}
+            // disabled={isTransactionLoading || loading}
           >
             Make Transfer
           </StyledSendButton>
