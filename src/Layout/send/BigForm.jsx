@@ -377,6 +377,7 @@ function BigForm({
     }
     setLoading(false);
   };
+  console.log(answer);
 
   const onSubmit = async (data) => {
     console.log("Submit form")
@@ -530,8 +531,8 @@ function BigForm({
               onChange={handleAmountChange}
             />
           </StyledName>
-          {/* <StyledName>
-            <StyledLabel htmlFor="amount-to-send">
+          <StyledName>
+            <StyledLabel htmlFor="amount-to-receive">
               Receive Amount
             </StyledLabel>
             <StyledInput
@@ -540,12 +541,13 @@ function BigForm({
               name="amount-to-receive"
               min={5}
               step="1"
+              value={answer}
               disabled={isTransactionLoading || loading}
               required
-              {...register("amountToSend")}
+              {...register("amountToReceive")}
               onChange={handleAmountChange}
             />
-          </StyledName> */}
+          </StyledName>
         </StyledNames>
       </StepContainer>
       <StepContainer isVisible={step === 2}>
