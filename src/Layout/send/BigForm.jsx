@@ -186,6 +186,8 @@ function BigForm({
   const [exchange, setExchange] = useState(null);
   const [newExchange, setNewExchange] = useState(null);
   const { user, isLoading } = useUser();
+  const [input1, setInput1] = useState("");
+  const [input2, setInput2] = useState("");
 
   const { data, isChargesLoading } = useCharges();
   const { countriesList, isCountriesLoading } = useCountries();
@@ -342,6 +344,10 @@ function BigForm({
   const handleAmountChange = (e) => {
     const amountUSD = parseFloat(e.target.value);
     const amountKRW = amountUSD * exchange;
+    setInput1(amountUSD);
+    setInput2(amountKRW);
+    setValue("amountToSend", amountUSD)
+    setValue("amountToReceive", amountKRW)
 
     const { transferFees, chargePercentage } = calculateTransferFees(amountKRW);
 
@@ -377,10 +383,16 @@ function BigForm({
     }
     setLoading(false);
   };
-  console.log(answer);
+  const handleAmountChange2 = (e) => {
+    const value = parseFloat(e.target.value);
+    setInput2(value)
+    setInput1(value / exchange)
+    setValue("amountToSend", value / exchange)
+    setValue("amountToReceive", value)
+  }
 
   const onSubmit = async (data) => {
-    console.log("Submit form")
+    console.log(data)
     const userId = user.data.user._id;
     const formDataWithUser = {
       ...data,
@@ -517,7 +529,7 @@ function BigForm({
         <StyledNames>
           <StyledName>
             <StyledLabel htmlFor="amount-to-send">
-              Amount To Send (minimum is $5)
+              Amount To Send in (USD)(minimum is $5 )
             </StyledLabel>
             <StyledInput
               type="number"
@@ -525,6 +537,7 @@ function BigForm({
               name="amount-to-send"
               min={5}
               step="1"
+              value={Math.round(input1)}
               disabled={isTransactionLoading || loading}
               required
               {...register("amountToSend")}
@@ -533,7 +546,7 @@ function BigForm({
           </StyledName>
           <StyledName>
             <StyledLabel htmlFor="amount-to-receive">
-              Receive Amount
+              Amount To Send in (KRW)
             </StyledLabel>
             <StyledInput
               type="number"
@@ -541,11 +554,11 @@ function BigForm({
               name="amount-to-receive"
               min={5}
               step="1"
-              value={answer}
+              value={Math.round(input2)}
               disabled={isTransactionLoading || loading}
               required
               {...register("amountToReceive")}
-              onChange={handleAmountChange}
+              onChange={handleAmountChange2}
             />
           </StyledName>
         </StyledNames>
@@ -604,7 +617,7 @@ function BigForm({
             Previous
           </StyledSendButton>
         )}
-        {step === 2 ? (
+        {step === 1 ? (
           <StyledSendButton
             type="submit"
             // disabled={isTransactionLoading || loading}
