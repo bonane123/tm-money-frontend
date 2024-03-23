@@ -339,19 +339,8 @@ function BigForm({
     return { transferFees, chargePercentage };
   };
 
-  
-  // Handle amount change using the already fetched exchange and newExchange data
-  const handleAmountChange = (e) => {
-    const amountUSD = parseFloat(e.target.value);
-    const amountKRW = amountUSD * exchange;
-    setInput1(amountUSD);
-    setInput2(amountKRW);
-    setValue("amountToSend", amountUSD)
-    setValue("amountToReceive", amountKRW)
-
-    const { transferFees, chargePercentage } = calculateTransferFees(amountKRW);
-
-    const updatedReceiverGets = amountKRW - transferFees;
+  const handleAfterChangeAmount = (newAmount, newTransferFees, newChargePercentage) => {
+    const updatedReceiverGets = newAmount - newTransferFees;
 
     setLoading(true);
 
@@ -364,14 +353,14 @@ function BigForm({
             updatedReceiverGets * newExchange
           );
         }
-        setValue("transferFees", Math.round(transferFees));
+        setValue("transferFees", Math.round(newTransferFees));
         setValue("receiverGets", updatedReceiverGetsValue);
-        setValue("percentageCharges", chargePercentage);
+        setValue("percentageCharges", newChargePercentage);
         updateFormData({
-          amountToSend: amountKRW,
-          transferFees: Math.round(transferFees),
+          amountToSend: newAmount,
+          transferFees: Math.round(newTransferFees),
           receiverGets: updatedReceiverGetsValue,
-          percentageCharges: chargePercentage,
+          percentageCharges: newChargePercentage,
           transferCurrency: transferCurrency,
           destinationCurrency: selectedCountry
             ? selectedCountry.currency
@@ -382,13 +371,31 @@ function BigForm({
       console.log(error);
     }
     setLoading(false);
+  }
+  
+  // Handle amount change using the already fetched exchange and newExchange data
+  const handleAmountChange = (e) => {
+    const amountUSD = parseFloat(e.target.value);
+    const amountKRW = amountUSD * exchange;
+    setInput1(amountUSD);
+    setInput2(amountKRW);
+    setValue("amountToSend", amountUSD)
+    setValue("amountToReceive", amountKRW)
+
+    const { transferFees, chargePercentage } = calculateTransferFees(amountKRW);
+    handleAfterChangeAmount(amountKRW, transferFees, chargePercentage)
+
+
   };
+
   const handleAmountChange2 = (e) => {
     const value = parseFloat(e.target.value);
     setInput2(value)
     setInput1(value / exchange)
     setValue("amountToSend", value / exchange)
     setValue("amountToReceive", value)
+    const { transferFees, chargePercentage } = calculateTransferFees(value);
+    handleAfterChangeAmount(value, transferFees, chargePercentage)
   }
 
   const onSubmit = async (data) => {
