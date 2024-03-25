@@ -160,10 +160,6 @@ const StyledSendButton = styled.button`
   margin-bottom: 2rem;
 `;
 
-const StepContainer = styled.div`
-  display: ${({ isVisible }) => (isVisible ? "block" : "none")};
-`;
-
 const NavigationContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -176,7 +172,6 @@ function BigForm({
   answer,
   selectedDirection,
   bankInfo,
-  paymentMethod,
   setFormData,
 }) {
   const { register, handleSubmit, setValue, control } = useForm();
@@ -191,7 +186,6 @@ function BigForm({
 
   const { data, isChargesLoading } = useCharges();
   const { countriesList, isCountriesLoading } = useCountries();
-  const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [selectedBank, setSelectedBank] = useState(null);
   const { createNewTransaction, isTransactionLoading } = useCreateTransaction();
   const navigate = useNavigate();
@@ -199,20 +193,6 @@ function BigForm({
   const INITIAL_AMOUNT = 1;
 
   let updatedReceiverGetsValue = null;
-
-  const [step, setStep] = useState(1);
-
-  const handleNext = () => {
-    if (step < 2) {
-      setStep(step + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
 
   // Function to handle direction radio button change
   const handleDirectionChange = (direction) => {
@@ -242,6 +222,7 @@ function BigForm({
   };
   const handleBankItemClick = (bank) => {
     setSelectedBank(bank);
+
   };
 
   // Function to fetch exchange data
@@ -399,23 +380,20 @@ function BigForm({
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
     const userId = user.data.user._id;
     const formDataWithUser = {
       ...data,
       ...selectedBank,
       user: userId,
     };
-
-
-    // try {
-    //   await createNewTransaction({
-    //     transaction: formDataWithUser,
-    //   });
-    //   navigate("/transactions/users");
-    // } catch (error) {
-    //   console.error("Transaction creation failed:", error);
-    // }
+    try {
+      await createNewTransaction({
+        transaction: formDataWithUser,
+      });
+      navigate("/transactions/users");
+    } catch (error) {
+      console.error("Transaction creation failed:", error);
+    }
   };
 
 
@@ -428,7 +406,7 @@ function BigForm({
 
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
-      <StepContainer isVisible={step === 1}>
+
         <StyledP>Receiver Information</StyledP>
         <StyledNames>
           <StyledName>
@@ -569,8 +547,7 @@ function BigForm({
             />
           </StyledName>
         </StyledNames>
-      </StepContainer>
-      <StepContainer isVisible={step === 2}>
+
         <RadioContainer>
           <p>Wire Transfer</p>
           <p>
@@ -616,24 +593,17 @@ function BigForm({
             ))}
           </BankInfoContainer>
         )}
-      </StepContainer>
+
 
       <NavigationContainer>
-        {step !== 1 && (
-          <StyledSendButton onClick={handlePrev} disabled={step === 1}>
-            Previous
-          </StyledSendButton>
-        )}
-        {step === 1 ? (
+        
           <StyledSendButton
             type="submit"
             // disabled={isTransactionLoading || loading}
           >
             Make Transfer
           </StyledSendButton>
-        ) : (
-          <StyledSendButton onClick={handleNext}>Next</StyledSendButton>
-        )}
+
       </NavigationContainer>
     </StyledForm>
   );

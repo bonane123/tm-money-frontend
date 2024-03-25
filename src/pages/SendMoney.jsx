@@ -116,14 +116,10 @@ const SendMoney = () => {
     receiverGets: 0,
     transferCurrency: "",
     answer: 0,
-    paymentMethod: "", // New state to track the selected payment method
-    selectedDirection: "",
     bankInfo: null,
   });
 
   const [answer, setAnswer] = useState("");
-  const [showCheckboxes, setShowCheckboxes] = useState(false);
-  const [selectedBank, setSelectedBank] = useState(null);
 
   const updateFormData = (data, newAnswer) => {
     setFormData((prevData) => ({
@@ -136,20 +132,6 @@ const SendMoney = () => {
   const updateAnswer = (newAnswer) => {
     setAnswer(newAnswer);
     updateFormData(formData, newAnswer);
-  };
-
-  // Function to handle radio button change
-  const handlePaymentMethodChange = (event) => {
-    const selectedMethod = event.target.value;
-    setFormData((prevData) => ({
-      ...prevData,
-      paymentMethod: selectedMethod,
-      selectedDirection: "",
-      bankInfo: null,
-    }));
-
-    // Show checkboxes if Wire Transfer is selected
-    setShowCheckboxes(selectedMethod === "wireTransfer");
   };
 
   return (
@@ -170,7 +152,6 @@ const SendMoney = () => {
         {/* Rest of the form components */}
         <FormContainer>
           <BigForm
-            selectedBank={selectedBank}
             updateFormData={updateFormData}
             updateAnswer={updateAnswer}
             answer={answer}
