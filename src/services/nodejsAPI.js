@@ -1,1 +1,1 @@
-export const URL = 'https://nodejs-tutorial-ed0l.onrender.com/api/v1';
+export const URL = 'http://localhost:5173/api/v1';
